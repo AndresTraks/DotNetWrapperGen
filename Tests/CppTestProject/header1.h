@@ -1,0 +1,7 @@
+﻿namespace CppNamespace
+{
+class CppClass
+{
+
+};
+};
