@@ -28,7 +28,7 @@ namespace DotNetWrapperGen.View
         {
             Stream iconStream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"DotNetWrapperGen.Images.{imageName}.png");
             Image icon = Image.FromStream(iconStream);
-            imageList1.Images.Add(imageName, icon);
+            imageList.Images.Add(imageName, icon);
         }
 
         private void parseFilesButton_Click(object sender, EventArgs e)

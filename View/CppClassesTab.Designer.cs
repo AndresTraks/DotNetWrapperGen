@@ -31,7 +31,7 @@
             this.components = new System.ComponentModel.Container();
             this.parseFilesButton = new System.Windows.Forms.Button();
             this.classTree = new System.Windows.Forms.TreeView();
-            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
+            this.imageList = new System.Windows.Forms.ImageList(this.components);
             this.SuspendLayout();
             // 
             // parseFilesButton
@@ -50,18 +50,18 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.classTree.ImageIndex = 0;
-            this.classTree.ImageList = this.imageList1;
+            this.classTree.ImageList = this.imageList;
             this.classTree.Location = new System.Drawing.Point(0, 57);
             this.classTree.Name = "classTree";
             this.classTree.SelectedImageIndex = 0;
             this.classTree.Size = new System.Drawing.Size(616, 284);
             this.classTree.TabIndex = 7;
             // 
-            // imageList1
+            // imageList
             // 
-            this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
-            this.imageList1.ImageSize = new System.Drawing.Size(16, 16);
-            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageList.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
+            this.imageList.ImageSize = new System.Drawing.Size(16, 16);
+            this.imageList.TransparentColor = System.Drawing.Color.Transparent;
             // 
             // CppClassesTab
             // 
@@ -79,6 +79,6 @@
 
         private System.Windows.Forms.Button parseFilesButton;
         private System.Windows.Forms.TreeView classTree;
-        private System.Windows.Forms.ImageList imageList1;
+        private System.Windows.Forms.ImageList imageList;
     }
 }

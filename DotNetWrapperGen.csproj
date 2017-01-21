@@ -72,6 +72,7 @@
     <Compile Include="CodeModel\TypeRefDefinition.cs" />
     <Compile Include="Project\ProjectFileLoader.cs" />
     <Compile Include="Project\WrapperProject.cs" />
+    <Compile Include="Transformer\DotNetTransformer.cs" />
     <Compile Include="View\CppClassesTab.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -83,6 +84,12 @@
     </Compile>
     <Compile Include="View\CppFilesTab.Designer.cs">
       <DependentUpon>CppFilesTab.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\CSharpFilesTab.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="View\CSharpFilesTab.Designer.cs">
+      <DependentUpon>CSharpFilesTab.cs</DependentUpon>
     </Compile>
     <Compile Include="View\ProjectView.cs">
       <SubType>Form</SubType>
@@ -104,6 +111,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="View\CppFilesTab.resx">
       <DependentUpon>CppFilesTab.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\CSharpFilesTab.resx">
+      <DependentUpon>CSharpFilesTab.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\ProjectView.resx">
       <DependentUpon>ProjectView.cs</DependentUpon>

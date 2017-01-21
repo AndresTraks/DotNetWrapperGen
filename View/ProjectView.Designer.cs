@@ -32,14 +32,14 @@
             this.logWindow = new System.Windows.Forms.TextBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.cppFilesTabPlaceHolder = new System.Windows.Forms.TabPage();
+            this.cppFilesTab = new DotNetWrapperGen.View.CppFilesTab();
             this.cppClassesPlaceHolder = new System.Windows.Forms.TabPage();
+            this.cppClassesTab = new DotNetWrapperGen.View.CppClassesTab();
             this.csharpFilesPlaceHolder = new System.Windows.Forms.TabPage();
-            this.outputTree = new System.Windows.Forms.TreeView();
+            this.csharpFilesTab = new DotNetWrapperGen.View.CSharpFilesTab();
+            this.csharpClassesPlaceHolder = new System.Windows.Forms.TabPage();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.csharpClassesPlaceHolder = new System.Windows.Forms.TabPage();
-            this.cppFilesTab = new DotNetWrapperGen.View.CppFilesTab();
-            this.cppClassesTab = new DotNetWrapperGen.View.CppClassesTab();
             this.tabControl1.SuspendLayout();
             this.cppFilesTabPlaceHolder.SuspendLayout();
             this.cppClassesPlaceHolder.SuspendLayout();
@@ -85,6 +85,17 @@
             this.cppFilesTabPlaceHolder.Text = "C++ Files";
             this.cppFilesTabPlaceHolder.UseVisualStyleBackColor = true;
             // 
+            // cppFilesTab
+            // 
+            this.cppFilesTab.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.cppFilesTab.Location = new System.Drawing.Point(0, 0);
+            this.cppFilesTab.Margin = new System.Windows.Forms.Padding(0);
+            this.cppFilesTab.Name = "cppFilesTab";
+            this.cppFilesTab.Size = new System.Drawing.Size(776, 278);
+            this.cppFilesTab.TabIndex = 9;
+            // 
             // cppClassesPlaceHolder
             // 
             this.cppClassesPlaceHolder.Controls.Add(this.cppClassesTab);
@@ -96,9 +107,19 @@
             this.cppClassesPlaceHolder.Text = "C++ Classes";
             this.cppClassesPlaceHolder.UseVisualStyleBackColor = true;
             // 
+            // cppClassesTab
+            // 
+            this.cppClassesTab.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.cppClassesTab.Location = new System.Drawing.Point(0, 0);
+            this.cppClassesTab.Name = "cppClassesTab";
+            this.cppClassesTab.Size = new System.Drawing.Size(776, 278);
+            this.cppClassesTab.TabIndex = 0;
+            // 
             // csharpFilesPlaceHolder
             // 
-            this.csharpFilesPlaceHolder.Controls.Add(this.outputTree);
+            this.csharpFilesPlaceHolder.Controls.Add(this.csharpFilesTab);
             this.csharpFilesPlaceHolder.Location = new System.Drawing.Point(4, 22);
             this.csharpFilesPlaceHolder.Name = "csharpFilesPlaceHolder";
             this.csharpFilesPlaceHolder.Padding = new System.Windows.Forms.Padding(3);
@@ -107,15 +128,25 @@
             this.csharpFilesPlaceHolder.Text = "C# Files";
             this.csharpFilesPlaceHolder.UseVisualStyleBackColor = true;
             // 
-            // outputTree
+            // csharpFilesTab
             // 
-            this.outputTree.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.csharpFilesTab.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.outputTree.Location = new System.Drawing.Point(7, 7);
-            this.outputTree.Name = "outputTree";
-            this.outputTree.Size = new System.Drawing.Size(270, 280);
-            this.outputTree.TabIndex = 0;
+            this.csharpFilesTab.Location = new System.Drawing.Point(0, 0);
+            this.csharpFilesTab.Margin = new System.Windows.Forms.Padding(0);
+            this.csharpFilesTab.Name = "csharpFilesTab";
+            this.csharpFilesTab.Size = new System.Drawing.Size(776, 278);
+            this.csharpFilesTab.TabIndex = 0;
+            // 
+            // csharpClassesPlaceHolder
+            // 
+            this.csharpClassesPlaceHolder.Location = new System.Drawing.Point(4, 22);
+            this.csharpClassesPlaceHolder.Name = "csharpClassesPlaceHolder";
+            this.csharpClassesPlaceHolder.Size = new System.Drawing.Size(776, 278);
+            this.csharpClassesPlaceHolder.TabIndex = 3;
+            this.csharpClassesPlaceHolder.Text = "C# Classes";
+            this.csharpClassesPlaceHolder.UseVisualStyleBackColor = true;
             // 
             // menuStrip1
             // 
@@ -133,36 +164,6 @@
             this.saveToolStripMenuItem.Size = new System.Drawing.Size(43, 20);
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
-            // 
-            // csharpClassesPlaceHolder
-            // 
-            this.csharpClassesPlaceHolder.Location = new System.Drawing.Point(4, 22);
-            this.csharpClassesPlaceHolder.Name = "csharpClassesPlaceHolder";
-            this.csharpClassesPlaceHolder.Size = new System.Drawing.Size(776, 278);
-            this.csharpClassesPlaceHolder.TabIndex = 3;
-            this.csharpClassesPlaceHolder.Text = "C# Classes";
-            this.csharpClassesPlaceHolder.UseVisualStyleBackColor = true;
-            // 
-            // cppFilesTab
-            // 
-            this.cppFilesTab.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.cppFilesTab.Location = new System.Drawing.Point(0, 0);
-            this.cppFilesTab.Margin = new System.Windows.Forms.Padding(0);
-            this.cppFilesTab.Name = "cppFilesTab";
-            this.cppFilesTab.Size = new System.Drawing.Size(776, 278);
-            this.cppFilesTab.TabIndex = 9;
-            // 
-            // cppClassesTab
-            // 
-            this.cppClassesTab.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.cppClassesTab.Location = new System.Drawing.Point(0, 0);
-            this.cppClassesTab.Name = "cppClassesTab";
-            this.cppClassesTab.Size = new System.Drawing.Size(776, 278);
-            this.cppClassesTab.TabIndex = 0;
             // 
             // ProjectView
             // 
@@ -194,13 +195,13 @@
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage cppClassesPlaceHolder;
         private System.Windows.Forms.TabPage csharpFilesPlaceHolder;
-        private System.Windows.Forms.TreeView outputTree;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
         private System.Windows.Forms.TabPage cppFilesTabPlaceHolder;
         private CppFilesTab cppFilesTab;
         private CppClassesTab cppClassesTab;
         private System.Windows.Forms.TabPage csharpClassesPlaceHolder;
+        private CSharpFilesTab csharpFilesTab;
     }
 }
 

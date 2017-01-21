@@ -1,8 +1,10 @@
-﻿using DotNetWrapperGen.CodeStructure;
+﻿using DotNetWrapperGen.CodeModel;
+using DotNetWrapperGen.CodeStructure;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
@@ -17,13 +19,8 @@ namespace DotNetWrapperGen.View
         {
             InitializeComponent();
 
-            var iconStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("DotNetWrapperGen.Images.folder.png");
-            var icon = Image.FromStream(iconStream);
-            imageList1.Images.Add("folder", icon);
-
-            iconStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("DotNetWrapperGen.Images.header.png");
-            icon = Image.FromStream(iconStream);
-            imageList1.Images.Add("header", icon);
+            LoadIcon("folder");
+            LoadIcon("header");
 
             fileTree.MouseUp += sourceTree_MouseUp;
             fileTree.NodeMouseDoubleClick += sourceTree_NodeMouseDoubleClick;
@@ -33,6 +30,13 @@ namespace DotNetWrapperGen.View
         }
 
         public TreeView SourceTree => fileTree;
+
+        private void LoadIcon(string imageName)
+        {
+            Stream iconStream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"DotNetWrapperGen.Images.{imageName}.png");
+            Image icon = Image.FromStream(iconStream);
+            imageList.Images.Add(imageName, icon);
+        }
 
         void sourceItemSettings_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
         {
@@ -126,132 +130,78 @@ namespace DotNetWrapperGen.View
             }
         }
 
-        private void flatViewButton_CheckedChanged(object sender, EventArgs e)
-        {
-            foreach (TreeNode node in fileTree.Nodes)
-            {
-                node.Nodes.Clear();
-            }
-            if (_rootFolder != null)
-            {
-                SetData(_rootFolder);
-            }
-        }
-
         public void SetData(RootFolderDefinition rootFolder)
         {
             _rootFolder = rootFolder;
             if (rootFolder != null)
             {
-                if (fileTree.Nodes.Count == 1 &&
-                    fileTree.Nodes[0].Tag == rootFolder)
-                {
-                    RefreshRoot(rootFolder, fileTree.Nodes[0].Nodes);
-                }
-                else
-                {
-                    AddSourceItem(fileTree.Nodes, rootFolder);
-                }
-            }
-        }
-
-
-        private void RefreshRoot(RootFolderDefinition rootFolder, TreeNodeCollection nodes)
-        {
-            foreach (SourceItemDefinition item in rootFolder.Children)
-            {
-                TreeNode node = GetTreeNodeByTag(nodes, item);
-                if (item.IsFolder)
-                {
-                    if (node != null && flatViewButton.Checked)
-                    {
-                        node.Remove();
-                    }
-                    else if (node == null && !flatViewButton.Checked)
-                    {
-                        AddSourceItem(nodes, item as FolderDefinition);
-                    }
-                }
-                else
-                {
-                    if (node == null)
-                    {
-                        AddSourceItem(nodes, item as HeaderDefinition);
-                    }
-                }
-            }
-
-            if (flatViewButton.Checked)
-            {
-                return;
-            }
-
-            bool reiterate;
-            do
-            {
-                reiterate = false;
-                foreach (TreeNode node in nodes)
-                {
-                    if (rootFolder.Children.Contains(node.Tag as SourceItemDefinition))
-                    {
-                        if (RefreshNode(node))
-                        {
-                            reiterate = true;
-                            break;
-                        }
-                    }
-                    else
-                    {
-                        node.Remove();
-                        reiterate = true;
-                        break;
-                    }
-                }
-            } while (reiterate);
-        }
-
-        private void AddSourceItem(TreeNodeCollection nodes, SourceItemDefinition item)
-        {
-            if (!showExcludedButton.Checked && item.IsExcluded)
-            {
-                return;
-            }
-
-            if (item.IsFolder && flatViewButton.Checked)
-            {
-                foreach (var child in InputFileOrder(item.Children))
-                {
-                    AddSourceItem(nodes, child);
-                }
-                return;
-            }
-
-            var newNode = nodes.Add(item.Name);
-            newNode.Tag = item;
-            if (item.IsExcluded)
-            {
-                newNode.ForeColor = Color.Gray;
-            }
-            if (item.IsFolder)
-            {
-                newNode.ImageKey = "folder";
-                newNode.SelectedImageKey = "folder";
-
-                foreach (var child in InputFileOrder(item.Children))
-                {
-                    AddSourceItem(newNode.Nodes, child);
-                }
+                RefreshItemNodes(new[] { rootFolder }, fileTree.Nodes);
+                fileTree.Nodes[0].Expand();
             }
             else
             {
-                newNode.ImageKey = "header";
-                newNode.SelectedImageKey = "header";
+                fileTree.Nodes.Clear();
             }
         }
 
-        private IOrderedEnumerable<SourceItemDefinition> InputFileOrder(IEnumerable<SourceItemDefinition> sourceItems)
+
+        private void RefreshItemNodes(IEnumerable<SourceItemDefinition> items, TreeNodeCollection nodes)
         {
-            return sourceItems
+            var existingItems = new Dictionary<SourceItemDefinition, TreeNode>();
+
+            int nodeIndex = 0;
+            while (nodeIndex < nodes.Count)
+            {
+                TreeNode node = nodes[nodeIndex];
+                var item = items.FirstOrDefault(i => i == node.Tag);
+                if (item != null)
+                {
+                    existingItems.Add(item, node);
+                    nodeIndex++;
+                }
+                else
+                {
+                    node.Remove();
+                }
+            }
+
+            foreach (SourceItemDefinition item in items)
+            {
+                TreeNode node;
+                if (!existingItems.TryGetValue(item, out node))
+                {
+                    node = nodes.Add(item.Name);
+                    node.Tag = item;
+                }
+                SetNodeProperties(item, node);
+                if (showExcludedButton.Checked || !item.IsExcluded)
+                {
+                    RefreshItemNodes(InputFileOrder(item.Children), node.Nodes);
+                }
+            }
+        }
+
+        private void SetNodeProperties(SourceItemDefinition item, TreeNode node)
+        {
+            if (item.IsExcluded)
+            {
+                node.ForeColor = Color.Gray;
+            }
+            if (item.IsFolder)
+            {
+                node.ImageKey = "folder";
+                node.SelectedImageKey = "folder";
+            }
+            else
+            {
+                node.ImageKey = "header";
+                node.SelectedImageKey = "header";
+            }
+        }
+
+        private IOrderedEnumerable<SourceItemDefinition> InputFileOrder(IEnumerable<SourceItemDefinition> item)
+        {
+            return item
                 .OrderBy(i => !i.IsFolder)
                 .ThenBy(i => i.IsExcluded);
         }

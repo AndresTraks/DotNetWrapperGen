@@ -29,28 +29,16 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.flatViewButton = new System.Windows.Forms.CheckBox();
             this.showExcludedButton = new System.Windows.Forms.CheckBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.fileTree = new System.Windows.Forms.TreeView();
+            this.imageList = new System.Windows.Forms.ImageList(this.components);
             this.sourceItemSettings = new System.Windows.Forms.PropertyGrid();
-            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // flatViewButton
-            // 
-            this.flatViewButton.AutoSize = true;
-            this.flatViewButton.Location = new System.Drawing.Point(3, 27);
-            this.flatViewButton.Name = "flatViewButton";
-            this.flatViewButton.Size = new System.Drawing.Size(69, 17);
-            this.flatViewButton.TabIndex = 10;
-            this.flatViewButton.Text = "Flat View";
-            this.flatViewButton.UseVisualStyleBackColor = true;
-            this.flatViewButton.CheckedChanged += new System.EventHandler(this.flatViewButton_CheckedChanged);
             // 
             // showExcludedButton
             // 
@@ -90,7 +78,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.fileTree.ImageIndex = 0;
-            this.fileTree.ImageList = this.imageList1;
+            this.fileTree.ImageList = this.imageList;
             this.fileTree.Location = new System.Drawing.Point(0, 0);
             this.fileTree.Margin = new System.Windows.Forms.Padding(0);
             this.fileTree.Name = "fileTree";
@@ -98,6 +86,12 @@
             this.fileTree.Size = new System.Drawing.Size(382, 299);
             this.fileTree.TabIndex = 2;
             this.fileTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.sourceTree_AfterSelect);
+            // 
+            // imageList
+            // 
+            this.imageList.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
+            this.imageList.ImageSize = new System.Drawing.Size(16, 16);
+            this.imageList.TransparentColor = System.Drawing.Color.Transparent;
             // 
             // sourceItemSettings
             // 
@@ -111,18 +105,11 @@
             this.sourceItemSettings.Size = new System.Drawing.Size(294, 299);
             this.sourceItemSettings.TabIndex = 5;
             // 
-            // imageList1
-            // 
-            this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
-            this.imageList1.ImageSize = new System.Drawing.Size(16, 16);
-            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
-            // 
             // CppFilesTab
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.splitContainer1);
-            this.Controls.Add(this.flatViewButton);
             this.Controls.Add(this.showExcludedButton);
             this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "CppFilesTab";
@@ -137,12 +124,10 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.CheckBox flatViewButton;
         private System.Windows.Forms.CheckBox showExcludedButton;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.TreeView fileTree;
         private System.Windows.Forms.PropertyGrid sourceItemSettings;
-        private System.Windows.Forms.ImageList imageList1;
+        private System.Windows.Forms.ImageList imageList;
     }
 }

@@ -1,5 +1,4 @@
-﻿using DotNetWrapperGen.CodeModel;
-using DotNetWrapperGen.Project;
+﻿using DotNetWrapperGen.Project;
 using System;
 using System.IO;
 using System.Windows.Forms;
@@ -44,37 +43,39 @@ namespace DotNetWrapperGen.View
         {
             if (e.Event == WrapperProjectEvent.StatusChanged)
             {
-                BeginInvoke((Action)(() =>
-                {
-                    switch (e.Status)
-                    {
-                        case WrapperStatus.ReadingHeaders:
-                            Log("Finding input files...\r\n");
-                            Text = "Finding input files...";
-                            break;
-                        case WrapperStatus.ReadingHeadersDone:
-                            cppFilesTab.SetData(Project.RootFolder);
-                            cppFilesTab.SourceTree.Nodes[0].Expand();
-                            Application.UserAppDataRegistry.SetValue("SourceFolder", Project.FullSourcePath);
-                            Project.ParseAsync();
-                            break;
-                        case WrapperStatus.ParsingHeaders:
-                            cppFilesTab.SetData(null);
-                            cppClassesTab.SetData(null);
-                            Log("Parsing input files...\r\n");
-                            Text = "Parsing input files...";
-                            break;
-                        case WrapperStatus.ParsingHeadersDone:
-                            Text = Project.NamespaceName;
-                            cppFilesTab.SetData(Project.RootFolder);
-                            cppClassesTab.SetData(Project);
-                            break;
-                    }
-                }));
+                BeginInvoke((Action)(() => HandleEvent(e.Status)));
             }
             else if (e.Event == WrapperProjectEvent.LogMessage)
             {
                 Log(e.Text);
+            }
+        }
+
+        private void HandleEvent(WrapperStatus status)
+        {
+            switch (status)
+            {
+                case WrapperStatus.ReadingHeaders:
+                    Log("Finding input files...\r\n");
+                    Text = "Finding input files...";
+                    break;
+                case WrapperStatus.ReadingHeadersDone:
+                    cppFilesTab.SetData(Project.RootFolder);
+                    Application.UserAppDataRegistry.SetValue("SourceFolder", Project.FullSourcePath);
+                    Project.ParseAsync();
+                    break;
+                case WrapperStatus.ParsingHeaders:
+                    cppFilesTab.SetData(null);
+                    cppClassesTab.SetData(null);
+                    Log("Parsing input files...\r\n");
+                    Text = "Parsing input files...";
+                    break;
+                case WrapperStatus.ParsingHeadersDone:
+                    Text = Project.NamespaceName;
+                    cppFilesTab.SetData(Project.RootFolder);
+                    cppClassesTab.SetData(Project);
+                    csharpFilesTab.SetData(Project.RootFolder);
+                    break;
             }
         }
 
@@ -84,8 +85,6 @@ namespace DotNetWrapperGen.View
                 logWindow.Text += message;
                 logWindow.Select(logWindow.Text.Length, 0);
             }));
-            //logWindow.Text += message;
-            //logWindow.Select(logWindow.Text.Length, 0);
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
