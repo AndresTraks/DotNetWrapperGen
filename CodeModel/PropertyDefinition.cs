@@ -95,15 +95,17 @@ namespace DotNetWrapperGen.CodeModel
                 setterName = "set" + name;
             }
 
-            Getter = new MethodDefinition(getterName, Parent);
+            Getter = new MethodDefinition(getterName);
             Getter.ReturnType = field.Type;
             Getter.Field = field;
             Getter.Property = this;
+            Parent.AddChild(Getter);
 
-            Setter = new MethodDefinition(setterName, Parent, new ParameterDefinition("value", field.Type));
+            Setter = new MethodDefinition(setterName, new ParameterDefinition("value", field.Type));
             Setter.ReturnType = new TypeRefDefinition();
             Setter.Field = field;
             Setter.Property = this;
+            Parent.AddChild(Setter);
         }
 
         public override string ToString()

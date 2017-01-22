@@ -135,6 +135,7 @@ namespace DotNetWrapperGen.CodeModel
                 case ClangSharp.Type.Kind.Record:
                 case ClangSharp.Type.Kind.Unexposed:
                 case ClangSharp.Type.Kind.DependentSizedArray:
+                case ClangSharp.Type.Kind.IncompleteArray:
                     break;
                 default:
                     throw new NotImplementedException();
@@ -188,6 +189,8 @@ namespace DotNetWrapperGen.CodeModel
                 case ClangSharp.Type.Kind.LValueReference:
                 case ClangSharp.Type.Kind.FunctionProto:
                 case ClangSharp.Type.Kind.DependentSizedArray:
+                case ClangSharp.Type.Kind.ConstantArray:
+                case ClangSharp.Type.Kind.IncompleteArray:
                     return null;
                 default:
                     throw new NotImplementedException();
@@ -207,13 +210,8 @@ namespace DotNetWrapperGen.CodeModel
 
         public override bool Equals(object obj)
         {
-            if (obj == null)
-            {
-                return false;
-            }
-
             TypeRefDefinition t = obj as TypeRefDefinition;
-            if ((System.Object)t == null)
+            if (t == null)
             {
                 return false;
             }
@@ -231,7 +229,7 @@ namespace DotNetWrapperGen.CodeModel
                 return t.Referenced.Equals(Referenced);
             }
 
-            return t.Name.Equals(Name);
+            return string.Equals(t.Name, Name, StringComparison.Ordinal);
         }
 
         public override int GetHashCode()
@@ -242,6 +240,16 @@ namespace DotNetWrapperGen.CodeModel
         public override string ToString()
         {
             return ManagedName;
+        }
+
+        public override void AddChild(ModelNodeDefinition child)
+        {
+            throw new NotSupportedException("Typeref cannot have children");
+        }
+
+        public override object Clone()
+        {
+            return new TypeRefDefinition(Name);
         }
     }
 }

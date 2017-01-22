@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace DotNetWrapperGen.CodeModel
 {
@@ -11,6 +12,16 @@ namespace DotNetWrapperGen.CodeModel
         public EnumDefinition(string name)
             : base(name)
         {
+        }
+
+        public override void AddChild(ModelNodeDefinition child)
+        {
+            throw new NotSupportedException("Enum cannot have children");
+        }
+
+        public override object Clone()
+        {
+            return new EnumDefinition(Name);
         }
     }
 

@@ -154,7 +154,7 @@ namespace DotNetWrapperGen.View
             {
                 TreeNode node = nodes[nodeIndex];
                 var item = items.FirstOrDefault(i => i == node.Tag);
-                if (item != null)
+                if (item != null && (showExcludedButton.Checked || !item.IsExcluded))
                 {
                     existingItems.Add(item, node);
                     nodeIndex++;
@@ -167,15 +167,15 @@ namespace DotNetWrapperGen.View
 
             foreach (SourceItemDefinition item in items)
             {
-                TreeNode node;
-                if (!existingItems.TryGetValue(item, out node))
-                {
-                    node = nodes.Add(item.Name);
-                    node.Tag = item;
-                }
-                SetNodeProperties(item, node);
                 if (showExcludedButton.Checked || !item.IsExcluded)
                 {
+                    TreeNode node;
+                    if (!existingItems.TryGetValue(item, out node))
+                    {
+                        node = nodes.Add(item.Name);
+                        node.Tag = item;
+                    }
+                    SetNodeProperties(item, node);
                     RefreshItemNodes(InputFileOrder(item.Children), node.Nodes);
                 }
             }

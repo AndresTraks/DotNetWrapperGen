@@ -1,5 +1,4 @@
 ﻿using DotNetWrapperGen.CodeStructure;
-using DotNetWrapperGen.Project;
 using System.ComponentModel;
 using System.Windows.Forms;
 

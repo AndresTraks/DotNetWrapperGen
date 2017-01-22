@@ -1,21 +1,15 @@
 ﻿using System;
+using System.Linq;
 
 namespace DotNetWrapperGen.CodeModel
 {
     public class MethodDefinition : ModelNodeDefinition
     {
-        public MethodDefinition(string name, ModelNodeDefinition parent, params ParameterDefinition[] parameters)
+        public MethodDefinition(string name, params ParameterDefinition[] parameters)
             : base(name)
         {
             Parameters = parameters;
-
-            if (!(parent is NamespaceDefinition || parent is ClassDefinition))
-            {
-                throw new ArgumentException("Method parent can only be a namespace or class", nameof(parent));
-            }
-
-            Parent = parent;
-            parent.Children.Add(this);
+            ReturnType = new TypeRefDefinition();
         }
 
         public TypeRefDefinition ReturnType { get; set; }
@@ -36,13 +30,8 @@ namespace DotNetWrapperGen.CodeModel
 
         public override bool Equals(object obj)
         {
-            if (obj == null)
-            {
-                return false;
-            }
-
             var m = obj as MethodDefinition;
-            if ((System.Object)m == null)
+            if (m == null)
             {
                 return false;
             }
@@ -59,6 +48,11 @@ namespace DotNetWrapperGen.CodeModel
 
             for (int i = 0; i < Parameters.Length; i++)
             {
+                if (m.Parameters[i].Type == null && Parameters[i].Type == null)
+                {
+                    continue;
+                }
+
                 // Parameter names can vary, but types must match
                 if (!m.Parameters[i].Type.Equals(Parameters[i].Type))
                 {
@@ -77,6 +71,16 @@ namespace DotNetWrapperGen.CodeModel
         public override string ToString()
         {
             return Name;
+        }
+
+        public override void AddChild(ModelNodeDefinition child)
+        {
+            throw new NotSupportedException("Method cannot have children");
+        }
+
+        public override object Clone()
+        {
+            return new MethodDefinition(Name, Parameters.Select(p => p.Clone()).ToArray());
         }
     }
 }

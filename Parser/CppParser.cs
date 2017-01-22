@@ -157,7 +157,8 @@ namespace DotNetWrapperGen.Parser
                 return;
             }
 
-            _context.Class = new ClassDefinition(className, parent);
+            _context.Class = new ClassDefinition(className);
+            parent.AddChild(_context.Class);
 
             cursor.VisitChildren(HeaderVisitor);
 
@@ -183,11 +184,12 @@ namespace DotNetWrapperGen.Parser
                 parameters[i] = ParseParameter(parameterCursor);
             }
 
-            _context.Method = new MethodDefinition(methodName, parent, parameters)
+            _context.Method = new MethodDefinition(methodName, parameters)
             {
                 IsConstructor = cursor.Kind == CursorKind.Constructor,
                 IsStatic = cursor.IsStaticCxxMethod
             };
+            parent.AddChild(_context.Method);
 
             IList<Token> tokens = _context.TranslationUnit.Tokenize(cursor.Extent).ToList();
             if (tokens.Count > 3)
@@ -210,7 +212,7 @@ namespace DotNetWrapperGen.Parser
             IEnumerable<Token> tokens = _context.TranslationUnit.Tokenize(cursor.Extent);
             bool isOptional = tokens.Any(t => t.Spelling == "=");
 
-            return new ParameterDefinition(parameterName, null, isOptional);
+            return new ParameterDefinition(parameterName, new TypeRefDefinition(cursor.Type), isOptional);
         }
 
         private ModelNodeDefinition GetCurrentParent()

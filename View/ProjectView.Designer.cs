@@ -38,12 +38,14 @@
             this.csharpFilesPlaceHolder = new System.Windows.Forms.TabPage();
             this.csharpFilesTab = new DotNetWrapperGen.View.CSharpFilesTab();
             this.csharpClassesPlaceHolder = new System.Windows.Forms.TabPage();
+            this.csharpClassesTab = new DotNetWrapperGen.View.CSharpClassesTab();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1.SuspendLayout();
             this.cppFilesTabPlaceHolder.SuspendLayout();
             this.cppClassesPlaceHolder.SuspendLayout();
             this.csharpFilesPlaceHolder.SuspendLayout();
+            this.csharpClassesPlaceHolder.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -141,12 +143,23 @@
             // 
             // csharpClassesPlaceHolder
             // 
+            this.csharpClassesPlaceHolder.Controls.Add(this.csharpClassesTab);
             this.csharpClassesPlaceHolder.Location = new System.Drawing.Point(4, 22);
             this.csharpClassesPlaceHolder.Name = "csharpClassesPlaceHolder";
             this.csharpClassesPlaceHolder.Size = new System.Drawing.Size(776, 278);
             this.csharpClassesPlaceHolder.TabIndex = 3;
             this.csharpClassesPlaceHolder.Text = "C# Classes";
             this.csharpClassesPlaceHolder.UseVisualStyleBackColor = true;
+            // 
+            // csharpClassesTab
+            // 
+            this.csharpClassesTab.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.csharpClassesTab.Location = new System.Drawing.Point(0, 0);
+            this.csharpClassesTab.Margin = new System.Windows.Forms.Padding(0);
+            this.csharpClassesTab.Name = "csharpClassesTab";
+            this.csharpClassesTab.Size = new System.Drawing.Size(332, 278);
+            this.csharpClassesTab.TabIndex = 0;
             // 
             // menuStrip1
             // 
@@ -183,6 +196,7 @@
             this.cppFilesTabPlaceHolder.ResumeLayout(false);
             this.cppClassesPlaceHolder.ResumeLayout(false);
             this.csharpFilesPlaceHolder.ResumeLayout(false);
+            this.csharpClassesPlaceHolder.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -202,6 +216,7 @@
         private CppClassesTab cppClassesTab;
         private System.Windows.Forms.TabPage csharpClassesPlaceHolder;
         private CSharpFilesTab csharpFilesTab;
+        private CSharpClassesTab csharpClassesTab;
     }
 }
 

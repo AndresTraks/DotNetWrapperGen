@@ -57,7 +57,6 @@ namespace DotNetWrapperGen.View
             {
                 case WrapperStatus.ReadingHeaders:
                     Log("Finding input files...\r\n");
-                    Text = "Finding input files...";
                     break;
                 case WrapperStatus.ReadingHeadersDone:
                     cppFilesTab.SetData(Project.RootFolder);
@@ -68,13 +67,18 @@ namespace DotNetWrapperGen.View
                     cppFilesTab.SetData(null);
                     cppClassesTab.SetData(null);
                     Log("Parsing input files...\r\n");
-                    Text = "Parsing input files...";
                     break;
                 case WrapperStatus.ParsingHeadersDone:
-                    Text = Project.NamespaceName;
                     cppFilesTab.SetData(Project.RootFolder);
                     cppClassesTab.SetData(Project);
                     csharpFilesTab.SetData(Project.RootFolder);
+
+                    Log("Transforming C++ to C#...\r\n");
+                    Project.TransformAsync();
+                    break;
+                case WrapperStatus.TransformingCppDone:
+                    csharpClassesTab.SetData(Project);
+                    Log("Done\r\n");
                     break;
             }
         }

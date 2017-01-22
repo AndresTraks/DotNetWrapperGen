@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace DotNetWrapperGen.CodeModel
 {
-    public class ModelNodeDefinition
+    public abstract class ModelNodeDefinition : ICloneable
     {
         public ModelNodeDefinition(string name)
         {
@@ -13,5 +14,13 @@ namespace DotNetWrapperGen.CodeModel
 
         public ModelNodeDefinition Parent { get; set; }
         public IList<ModelNodeDefinition> Children { get; } = new List<ModelNodeDefinition>();
+
+        public virtual void AddChild(ModelNodeDefinition child)
+        {
+            child.Parent = this;
+            Children.Add(child);
+        }
+
+        public abstract object Clone();
     }
 }

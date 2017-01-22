@@ -17,5 +17,10 @@
         {
             return Type.ToString() + ' ' + Name;
         }
+
+        public ParameterDefinition Clone()
+        {
+            return new ParameterDefinition(Name, Type?.Clone() as TypeRefDefinition, IsOptional);
+        }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace DotNetWrapperGen.View
 {
-    partial class CSharpFilesTab
+    partial class CSharpClassesTab
     {
         /// <summary> 
         /// Required designer variable.
@@ -29,9 +29,22 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            this.classTree = new System.Windows.Forms.TreeView();
             this.imageList = new System.Windows.Forms.ImageList(this.components);
-            this.fileTree = new System.Windows.Forms.TreeView();
             this.SuspendLayout();
+            // 
+            // classTree
+            // 
+            this.classTree.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.classTree.ImageIndex = 0;
+            this.classTree.ImageList = this.imageList;
+            this.classTree.Location = new System.Drawing.Point(0, 3);
+            this.classTree.Name = "classTree";
+            this.classTree.SelectedImageIndex = 0;
+            this.classTree.Size = new System.Drawing.Size(617, 300);
+            this.classTree.TabIndex = 8;
             // 
             // imageList
             // 
@@ -39,33 +52,20 @@
             this.imageList.ImageSize = new System.Drawing.Size(16, 16);
             this.imageList.TransparentColor = System.Drawing.Color.Transparent;
             // 
-            // fileTree
-            // 
-            this.fileTree.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.fileTree.ImageIndex = 0;
-            this.fileTree.ImageList = this.imageList;
-            this.fileTree.Location = new System.Drawing.Point(0, 3);
-            this.fileTree.Name = "fileTree";
-            this.fileTree.SelectedImageIndex = 0;
-            this.fileTree.Size = new System.Drawing.Size(356, 288);
-            this.fileTree.TabIndex = 8;
-            // 
-            // CSharpFilesTab
+            // CSharpClassesTab
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.fileTree);
-            this.Margin = new System.Windows.Forms.Padding(0);
-            this.Name = "CSharpFilesTab";
-            this.Size = new System.Drawing.Size(356, 294);
+            this.Controls.Add(this.classTree);
+            this.Name = "CSharpClassesTab";
+            this.Size = new System.Drawing.Size(617, 306);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
+        private System.Windows.Forms.TreeView classTree;
         private System.Windows.Forms.ImageList imageList;
-        private System.Windows.Forms.TreeView fileTree;
     }
 }

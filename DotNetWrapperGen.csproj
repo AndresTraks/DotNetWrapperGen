@@ -85,6 +85,12 @@
     <Compile Include="View\CppFilesTab.Designer.cs">
       <DependentUpon>CppFilesTab.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\CSharpClassesTab.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="View\CSharpClassesTab.Designer.cs">
+      <DependentUpon>CSharpClassesTab.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\CSharpFilesTab.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -111,6 +117,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="View\CppFilesTab.resx">
       <DependentUpon>CppFilesTab.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\CSharpClassesTab.resx">
+      <DependentUpon>CSharpClassesTab.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\CSharpFilesTab.resx">
       <DependentUpon>CSharpFilesTab.cs</DependentUpon>

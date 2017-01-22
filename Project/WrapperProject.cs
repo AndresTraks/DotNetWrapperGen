@@ -1,6 +1,7 @@
 ﻿using DotNetWrapperGen.CodeModel;
 using DotNetWrapperGen.CodeStructure;
 using DotNetWrapperGen.Parser;
+using DotNetWrapperGen.Transformer;
 using System;
 using System.ComponentModel;
 using System.IO;
@@ -21,7 +22,9 @@ namespace DotNetWrapperGen.Project
         ParsingHeaders,
         ParsingHeadersDone,
         ReadingHeaders,
-        ReadingHeadersDone
+        ReadingHeadersDone,
+        TransformingCpp,
+        TransformingCppDone
     }
 
     public class WrapperProject
@@ -30,7 +33,8 @@ namespace DotNetWrapperGen.Project
         public string FullProjectPath { get; set; }
         public string NamespaceName { get; set; }
         public RootFolderDefinition RootFolder { get; set; }
-        public NamespaceDefinition GlobalNamespace { get; private set; }
+        public NamespaceDefinition GlobalNamespaceCpp { get; private set; }
+        public NamespaceDefinition GlobalNamespaceCSharp { get; private set; }
 
         public WrapperStatus Status { get; private set; }
 
@@ -73,10 +77,36 @@ namespace DotNetWrapperGen.Project
 
         public void ParseAsync()
         {
-            WorkAsync((s, e) => {
+            WorkAsync((s, e) =>
+            {
                 SetStatus(WrapperStatus.ParsingHeaders);
-                GlobalNamespace = new CppParser().ParseRootFolder(RootFolder);
+                try
+                {
+                    GlobalNamespaceCpp = new CppParser().ParseRootFolder(RootFolder);
+                }
+                catch (Exception ex)
+                {
+                    //WrapperEvent.Invoke(this, new WrapperProjectEventArgs(WrapperProjectEvent.LogMessage, ex.ToString()));
+                }
                 SetStatus(WrapperStatus.ParsingHeadersDone);
+            });
+        }
+
+        public void TransformAsync()
+        {
+            WorkAsync((s, e) =>
+            {
+                SetStatus(WrapperStatus.TransformingCpp);
+                try
+                {
+                    GlobalNamespaceCSharp = DotNetTransformer.Clone(GlobalNamespaceCpp);
+                    DotNetTransformer.MoveSymbolsToClasses(GlobalNamespaceCSharp);
+                }
+                catch (Exception ex)
+                {
+                    //WrapperEvent.Invoke(this, new WrapperProjectEventArgs(WrapperProjectEvent.LogMessage, ex.ToString()));
+                }
+                SetStatus(WrapperStatus.TransformingCppDone);
             });
         }
 

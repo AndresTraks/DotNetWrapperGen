@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace DotNetWrapperGen.CodeModel
@@ -41,6 +42,21 @@ namespace DotNetWrapperGen.CodeModel
         public override string ToString()
         {
             return Name;
+        }
+
+        public override void AddChild(ModelNodeDefinition child)
+        {
+            base.AddChild(child);
+        }
+
+        public override object Clone()
+        {
+            var node = new NamespaceDefinition(Name);
+            foreach (ModelNodeDefinition childClone in Children.Select(c => c.Clone()))
+            {
+                node.AddChild(childClone);
+            }
+            return node;
         }
     }
 }

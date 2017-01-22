@@ -6,16 +6,9 @@ namespace DotNetWrapperGen.CodeModel
 {
     public class ClassDefinition : ModelNodeDefinition
     {
-        public ClassDefinition(string name, ModelNodeDefinition parent)
+        public ClassDefinition(string name)
             : base(name)
         {
-            if (!(parent is NamespaceDefinition || parent is ClassDefinition))
-            {
-                throw new ArgumentException("Class parent can only be a namespace or class", nameof(parent));
-            }
-
-            Parent = parent;
-            parent.Children.Add(this);
         }
 
         public TypeRefDefinition BaseClass { get; set; }
@@ -74,6 +67,21 @@ namespace DotNetWrapperGen.CodeModel
         public override string ToString()
         {
             return Name;
+        }
+
+        public override void AddChild(ModelNodeDefinition child)
+        {
+            if (child is NamespaceDefinition)
+            {
+                throw new ArgumentException("Cannot add namespace to class", nameof(child));
+            }
+
+            base.AddChild(child);
+        }
+
+        public override object Clone()
+        {
+            return new ClassDefinition(Name);
         }
     }
 }

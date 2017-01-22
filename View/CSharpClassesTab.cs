@@ -9,11 +9,11 @@ using System.Windows.Forms;
 
 namespace DotNetWrapperGen.View
 {
-    public partial class CppClassesTab : UserControl
+    public partial class CSharpClassesTab : UserControl
     {
         private WrapperProject _project;
 
-        public CppClassesTab()
+        public CSharpClassesTab()
         {
             InitializeComponent();
 
@@ -40,14 +40,14 @@ namespace DotNetWrapperGen.View
         {
             _project = project;
 
-            if (project?.GlobalNamespaceCpp != null)
+            if (project?.GlobalNamespaceCSharp != null)
             {
-                parseFilesButton.Enabled = true;
-                AddModelNode(project.GlobalNamespaceCpp, null);
+                //parseFilesButton.Enabled = true;
+                AddModelNode(project.GlobalNamespaceCSharp, null);
             }
             else
             {
-                parseFilesButton.Enabled = false;
+                //parseFilesButton.Enabled = false;
             }
         }
 

@@ -6,23 +6,25 @@ namespace DotNetWrapperGen.CodeModel
     {
         public TypeRefDefinition Type { get; private set; }
 
-        public FieldDefinition(string name, TypeRefDefinition type, ModelNodeDefinition parent)
+        public FieldDefinition(string name, TypeRefDefinition type)
             : base(name)
         {
             Type = type;
-
-            if (!(parent is NamespaceDefinition || parent is ClassDefinition))
-            {
-                throw new ArgumentException("Field parent can only be a namespace or class", nameof(parent));
-            }
-
-            Parent = parent;
-            parent.Children.Add(this);
         }
 
         public override string ToString()
         {
             return Name;
+        }
+
+        public override void AddChild(ModelNodeDefinition child)
+        {
+            throw new NotSupportedException("Field cannot have children");
+        }
+
+        public override object Clone()
+        {
+            return new FieldDefinition(Name, new TypeRefDefinition());
         }
     }
 }
