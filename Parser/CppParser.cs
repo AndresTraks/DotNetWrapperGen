@@ -99,6 +99,9 @@ namespace DotNetWrapperGen.Parser
                     case CursorKind.TypedefDecl:
                         ParseTypedefCursor(cursor);
                         break;
+                    case CursorKind.FieldDecl:
+                        FieldParser.Parse(cursor, _context);
+                        break;
                 }
             }
 
@@ -108,7 +111,7 @@ namespace DotNetWrapperGen.Parser
                 {
                     case CursorKind.CxxMethod:
                     case CursorKind.Constructor:
-                        ParseMethod(cursor);
+                        MethodParser.Parse(cursor, _context);
                         break;
                 }
             }
@@ -150,7 +153,7 @@ namespace DotNetWrapperGen.Parser
         private void ParseClass(Cursor cursor)
         {
             string className = cursor.Spelling;
-            ModelNodeDefinition parent = GetCurrentParent();
+            ModelNodeDefinition parent = _context.GetCurrentParent();
 
             if (parent.Children.Any(c => c.Name == className))
             {
@@ -174,67 +177,6 @@ namespace DotNetWrapperGen.Parser
             var underlying = cursor.TypedefDeclUnderlyingType.Canonical;
 
             //throw new NotImplementedException();
-        }
-
-        private void ParseMethod(Cursor cursor)
-        {
-            string methodName = cursor.Spelling;
-            ModelNodeDefinition parent = GetCurrentParent();
-
-            var parameters = new ParameterDefinition[cursor.NumArguments];
-            for (uint i = 0; i < cursor.NumArguments; i++)
-            {
-                Cursor parameterCursor = cursor.GetArgument(i);
-                parameters[i] = ParseParameter(parameterCursor);
-            }
-
-            _context.Method = new MethodDefinition(methodName, parameters)
-            {
-                IsConstructor = cursor.Kind == CursorKind.Constructor,
-                IsStatic = cursor.IsStaticCxxMethod
-            };
-            if (parent is NamespaceDefinition)
-            {
-                if (cursor.SemanticParent.Kind == CursorKind.ClassDecl ||
-                    cursor.SemanticParent.Kind == CursorKind.ClassTemplate ||
-                    cursor.SemanticParent.Kind == CursorKind.StructDecl)
-                {
-                    // FIXME: Clang reports a method definition as a method declaration
-                    return;
-                }
-                _context.Method.Header = _context.Header;
-            }
-            parent.AddChild(_context.Method);
-
-            IList<Token> tokens = _context.TranslationUnit.Tokenize(cursor.Extent).ToList();
-            if (tokens.Count > 3)
-            {
-                if (tokens[tokens.Count - 3].Spelling.Equals("=") &&
-                    tokens[tokens.Count - 2].Spelling.Equals("0") &&
-                    tokens[tokens.Count - 1].Spelling.Equals(";"))
-                {
-                    _context.Method.IsAbstract = true;
-                }
-            }
-
-            _context.Method = null;
-        }
-
-        private ParameterDefinition ParseParameter(Cursor cursor)
-        {
-            string parameterName = cursor.Spelling;
-
-            IEnumerable<Token> tokens = _context.TranslationUnit.Tokenize(cursor.Extent);
-            bool isOptional = tokens.Any(t => t.Spelling == "=");
-
-            return new ParameterDefinition(parameterName, new TypeRefDefinition(cursor.Type), isOptional);
-        }
-
-        private ModelNodeDefinition GetCurrentParent()
-        {
-            return _context.Class != null
-                ? _context.Class as ModelNodeDefinition
-                : _context.Namespace as ModelNodeDefinition;
         }
     }
 }

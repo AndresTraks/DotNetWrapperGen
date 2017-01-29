@@ -20,5 +20,12 @@ namespace DotNetWrapperGen.Parser
         public NamespaceDefinition Namespace { get; set; }
         public ClassDefinition Class { get; set; }
         public MethodDefinition Method { get; internal set; }
+
+        public ModelNodeDefinition GetCurrentParent()
+        {
+            return Class != null
+                ? Class as ModelNodeDefinition
+                : Namespace as ModelNodeDefinition;
+        }
     }
 }

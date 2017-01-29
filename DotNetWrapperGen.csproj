@@ -56,6 +56,8 @@
     <Compile Include="CodeModel\ModelNodeDefinition.cs" />
     <Compile Include="CodeModel\NamespaceDefinition.cs" />
     <Compile Include="Parser\CppParserContext.cs" />
+    <Compile Include="Parser\FieldParser.cs" />
+    <Compile Include="Parser\MethodParser.cs" />
     <Compile Include="Parser\VcppNameDecorator.cs" />
     <Compile Include="CodeStructure\FolderDefinition.cs" />
     <Compile Include="CodeStructure\SourceItemDefinition.cs" />
