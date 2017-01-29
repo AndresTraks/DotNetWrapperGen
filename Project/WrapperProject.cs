@@ -29,17 +29,6 @@ namespace DotNetWrapperGen.Project
 
     public class WrapperProject
     {
-        public string FullSourcePath { get; set; }
-        public string FullProjectPath { get; set; }
-        public string NamespaceName { get; set; }
-        public RootFolderDefinition RootFolder { get; set; }
-        public NamespaceDefinition GlobalNamespaceCpp { get; private set; }
-        public NamespaceDefinition GlobalNamespaceCSharp { get; private set; }
-
-        public WrapperStatus Status { get; private set; }
-
-        public event EventHandler<WrapperProjectEventArgs> WrapperEvent;
-
         public WrapperProject()
         {
 
@@ -56,6 +45,17 @@ namespace DotNetWrapperGen.Project
             var namespaceName = Path.GetFileName(FullSourcePath);
             NamespaceName = ConventionConverter.Convert(namespaceName);
         }
+
+        public string FullSourcePath { get; set; }
+        public string FullProjectPath { get; set; }
+        public string NamespaceName { get; set; }
+        public RootFolderDefinition RootFolder { get; set; }
+        public NamespaceDefinition GlobalNamespaceCpp { get; private set; }
+        public NamespaceDefinition GlobalNamespaceCSharp { get; private set; }
+
+        public WrapperStatus Status { get; private set; }
+
+        public event EventHandler<WrapperProjectEventArgs> WrapperEvent;
 
         public void WorkAsync(DoWorkEventHandler workHandler)
         {

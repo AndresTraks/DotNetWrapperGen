@@ -5,6 +5,8 @@ namespace DotNetWrapperGen.CodeModel
 {
     public class MethodDefinition : ModelNodeDefinition
     {
+        private ModelNodeDefinition _header;
+
         public MethodDefinition(string name, params ParameterDefinition[] parameters)
             : base(name)
         {

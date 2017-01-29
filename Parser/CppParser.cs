@@ -159,6 +159,10 @@ namespace DotNetWrapperGen.Parser
 
             _context.Class = new ClassDefinition(className);
             parent.AddChild(_context.Class);
+            if (parent is NamespaceDefinition)
+            {
+                _context.Class.Header = _context.Header;
+            }
 
             cursor.VisitChildren(HeaderVisitor);
 
@@ -189,6 +193,17 @@ namespace DotNetWrapperGen.Parser
                 IsConstructor = cursor.Kind == CursorKind.Constructor,
                 IsStatic = cursor.IsStaticCxxMethod
             };
+            if (parent is NamespaceDefinition)
+            {
+                if (cursor.SemanticParent.Kind == CursorKind.ClassDecl ||
+                    cursor.SemanticParent.Kind == CursorKind.ClassTemplate ||
+                    cursor.SemanticParent.Kind == CursorKind.StructDecl)
+                {
+                    // FIXME: Clang reports a method definition as a method declaration
+                    return;
+                }
+                _context.Method.Header = _context.Header;
+            }
             parent.AddChild(_context.Method);
 
             IList<Token> tokens = _context.TranslationUnit.Tokenize(cursor.Extent).ToList();

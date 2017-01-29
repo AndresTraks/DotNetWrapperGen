@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DotNetWrapperGen.CodeStructure;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -37,6 +38,13 @@ namespace DotNetWrapperGen.CodeModel
                 }
                 return Name;
             }
+        }
+
+        // Namespaces have no specific header
+        public override HeaderDefinition Header
+        {
+            get { throw new InvalidOperationException(); }
+            set { throw new InvalidOperationException(); }
         }
 
         public override string ToString()

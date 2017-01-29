@@ -76,6 +76,12 @@ namespace DotNetWrapperGen.CodeModel
                 throw new ArgumentException("Cannot add namespace to class", nameof(child));
             }
 
+            var method = child as MethodDefinition;
+            if (method != null)
+            {
+                method.Header = Header;
+            }
+
             base.AddChild(child);
         }
 

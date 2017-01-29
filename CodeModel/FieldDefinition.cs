@@ -4,13 +4,13 @@ namespace DotNetWrapperGen.CodeModel
 {
     public class FieldDefinition : ModelNodeDefinition
     {
-        public TypeRefDefinition Type { get; private set; }
-
         public FieldDefinition(string name, TypeRefDefinition type)
             : base(name)
         {
             Type = type;
         }
+
+        public TypeRefDefinition Type { get; private set; }
 
         public override string ToString()
         {

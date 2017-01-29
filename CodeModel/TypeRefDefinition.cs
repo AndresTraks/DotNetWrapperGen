@@ -4,6 +4,58 @@ namespace DotNetWrapperGen.CodeModel
 {
     public class TypeRefDefinition : ModelNodeDefinition
     {
+
+        public TypeRefDefinition(ClangSharp.Type type)
+            : base(GetName(type))
+        {
+            switch (type.TypeKind)
+            {
+                case ClangSharp.Type.Kind.Void:
+                case ClangSharp.Type.Kind.Bool:
+                case ClangSharp.Type.Kind.CharS:
+                case ClangSharp.Type.Kind.Double:
+                case ClangSharp.Type.Kind.Float:
+                case ClangSharp.Type.Kind.Int:
+                case ClangSharp.Type.Kind.UChar:
+                case ClangSharp.Type.Kind.UInt:
+                case ClangSharp.Type.Kind.WChar:
+                case ClangSharp.Type.Kind.SChar:
+                case ClangSharp.Type.Kind.Long:
+                case ClangSharp.Type.Kind.LongLong:
+                case ClangSharp.Type.Kind.Short:
+                case ClangSharp.Type.Kind.ULong:
+                case ClangSharp.Type.Kind.ULongLong:
+                case ClangSharp.Type.Kind.UShort:
+                case ClangSharp.Type.Kind.Enum:
+                    IsBasic = true;
+                    break;
+                case ClangSharp.Type.Kind.Typedef:
+                    Referenced = new TypeRefDefinition(type.Canonical);
+                    IsBasic = Referenced.IsBasic;
+                    break;
+                case ClangSharp.Type.Kind.Pointer:
+                    Referenced = new TypeRefDefinition(type.Pointee);
+                    IsPointer = true;
+                    break;
+                case ClangSharp.Type.Kind.LValueReference:
+                    Referenced = new TypeRefDefinition(type.Pointee);
+                    IsReference = true;
+                    break;
+                case ClangSharp.Type.Kind.ConstantArray:
+                    Referenced = new TypeRefDefinition(type.ArrayElementType);
+                    IsConstantArray = true;
+                    break;
+                case ClangSharp.Type.Kind.FunctionProto:
+                case ClangSharp.Type.Kind.Record:
+                case ClangSharp.Type.Kind.Unexposed:
+                case ClangSharp.Type.Kind.DependentSizedArray:
+                case ClangSharp.Type.Kind.IncompleteArray:
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
         public bool IsBasic { get; set; }
         public bool IsPointer { get; set; }
         public bool IsReference { get; set; }
@@ -88,57 +140,6 @@ namespace DotNetWrapperGen.CodeModel
                     return ManagedName + '^';
                 }
                 return ManagedName;
-            }
-        }
-
-        public TypeRefDefinition(ClangSharp.Type type)
-            : base(GetName(type))
-        {
-            switch (type.TypeKind)
-            {
-                case ClangSharp.Type.Kind.Void:
-                case ClangSharp.Type.Kind.Bool:
-                case ClangSharp.Type.Kind.CharS:
-                case ClangSharp.Type.Kind.Double:
-                case ClangSharp.Type.Kind.Float:
-                case ClangSharp.Type.Kind.Int:
-                case ClangSharp.Type.Kind.UChar:
-                case ClangSharp.Type.Kind.UInt:
-                case ClangSharp.Type.Kind.WChar:
-                case ClangSharp.Type.Kind.SChar:
-                case ClangSharp.Type.Kind.Long:
-                case ClangSharp.Type.Kind.LongLong:
-                case ClangSharp.Type.Kind.Short:
-                case ClangSharp.Type.Kind.ULong:
-                case ClangSharp.Type.Kind.ULongLong:
-                case ClangSharp.Type.Kind.UShort:
-                case ClangSharp.Type.Kind.Enum:
-                    IsBasic = true;
-                    break;
-                case ClangSharp.Type.Kind.Typedef:
-                    Referenced = new TypeRefDefinition(type.Canonical);
-                    IsBasic = Referenced.IsBasic;
-                    break;
-                case ClangSharp.Type.Kind.Pointer:
-                    Referenced = new TypeRefDefinition(type.Pointee);
-                    IsPointer = true;
-                    break;
-                case ClangSharp.Type.Kind.LValueReference:
-                    Referenced = new TypeRefDefinition(type.Pointee);
-                    IsReference = true;
-                    break;
-                case ClangSharp.Type.Kind.ConstantArray:
-                    Referenced = new TypeRefDefinition(type.ArrayElementType);
-                    IsConstantArray = true;
-                    break;
-                case ClangSharp.Type.Kind.FunctionProto:
-                case ClangSharp.Type.Kind.Record:
-                case ClangSharp.Type.Kind.Unexposed:
-                case ClangSharp.Type.Kind.DependentSizedArray:
-                case ClangSharp.Type.Kind.IncompleteArray:
-                    break;
-                default:
-                    throw new NotImplementedException();
             }
         }
 
