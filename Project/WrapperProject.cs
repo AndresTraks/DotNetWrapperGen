@@ -99,7 +99,7 @@ namespace DotNetWrapperGen.Project
                 SetStatus(WrapperStatus.TransformingCpp);
                 try
                 {
-                    GlobalNamespaceCSharp = DotNetTransformer.Clone(GlobalNamespaceCpp);
+                    GlobalNamespaceCSharp = StructureCloner.Clone(GlobalNamespaceCpp);
                     DotNetTransformer.MoveSymbolsToClasses(GlobalNamespaceCSharp);
                 }
                 catch (Exception ex)

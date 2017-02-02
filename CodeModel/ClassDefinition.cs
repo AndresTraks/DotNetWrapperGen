@@ -87,7 +87,10 @@ namespace DotNetWrapperGen.CodeModel
 
         public override object Clone()
         {
-            return new ClassDefinition(Name);
+            return new ClassDefinition(Name)
+            {
+                Header = Header
+            };
         }
     }
 }

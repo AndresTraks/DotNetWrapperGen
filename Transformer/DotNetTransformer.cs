@@ -1,15 +1,11 @@
 ﻿using DotNetWrapperGen.CodeModel;
+using System;
 using System.Linq;
 
 namespace DotNetWrapperGen.Transformer
 {
     public class DotNetTransformer
     {
-        public static NamespaceDefinition Clone(NamespaceDefinition globalNamespace)
-        {
-            return globalNamespace.Clone() as NamespaceDefinition;
-        }
-
         // In C#, namespaces cannot contain fields or methods, move them into classes.
         public static void MoveSymbolsToClasses(NamespaceDefinition @namespace)
         {
@@ -18,6 +14,7 @@ namespace DotNetWrapperGen.Transformer
             {
                 @namespace.Children.Remove(method);
                 method.Parent = null;
+                throw new NotImplementedException();
             }
 
             var childNamespaces = @namespace.Children.Where(c => c is NamespaceDefinition);

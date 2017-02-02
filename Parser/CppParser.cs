@@ -99,9 +99,7 @@ namespace DotNetWrapperGen.Parser
                     case CursorKind.TypedefDecl:
                         ParseTypedefCursor(cursor);
                         break;
-                    case CursorKind.FieldDecl:
-                        FieldParser.Parse(cursor, _context);
-                        break;
+
                 }
             }
 
@@ -112,6 +110,9 @@ namespace DotNetWrapperGen.Parser
                     case CursorKind.CxxMethod:
                     case CursorKind.Constructor:
                         MethodParser.Parse(cursor, _context);
+                        break;
+                    case CursorKind.FieldDecl:
+                        FieldParser.Parse(cursor, _context);
                         break;
                 }
             }
