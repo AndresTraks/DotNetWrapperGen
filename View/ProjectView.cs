@@ -79,6 +79,11 @@ namespace DotNetWrapperGen.View
                 case WrapperStatus.TransformingCppDone:
                     csharpFilesTab.SetData(Project.RootFolderCSharp);
                     csharpClassesTab.SetData(Project);
+
+                    Log("Writing wrapper...\r\n");
+                    Project.WriteWrapperAsync();
+                    break;
+                case WrapperStatus.WritingWrapperDone:
                     Log("Done\r\n");
                     break;
             }

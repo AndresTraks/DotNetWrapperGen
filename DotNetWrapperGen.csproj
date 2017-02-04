@@ -52,6 +52,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CodeStructure\PathUtility.cs" />
+    <Compile Include="CodeStructure\StructureNodeReplacer.cs" />
     <Compile Include="Parser\CppParser.cs" />
     <Compile Include="CodeModel\ModelNodeDefinition.cs" />
     <Compile Include="CodeModel\NamespaceDefinition.cs" />

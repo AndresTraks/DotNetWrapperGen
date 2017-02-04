@@ -2,6 +2,7 @@
 using DotNetWrapperGen.CodeStructure;
 using DotNetWrapperGen.Parser;
 using DotNetWrapperGen.Transformer;
+using DotNetWrapperGen.Writer;
 using System;
 using System.ComponentModel;
 using System.IO;
@@ -24,7 +25,9 @@ namespace DotNetWrapperGen.Project
         ReadingHeaders,
         ReadingHeadersDone,
         TransformingCpp,
-        TransformingCppDone
+        TransformingCppDone,
+        WritingWrapper,
+        WritingWrapperDone
     }
 
     public class WrapperProject
@@ -103,7 +106,11 @@ namespace DotNetWrapperGen.Project
                     var cloner = new StructureCloner();
                     cloner.Clone(GlobalNamespaceCpp);
                     GlobalNamespaceCSharp = cloner.RootNamespaceClone;
-                    RootFolderCSharp = cloner.RootFolderClone;
+
+                    var csharpRootFolderPath = RootFolder.FullPath + "/CS-Wrapper";
+                    RootFolderCSharp = new RootFolderDefinition(csharpRootFolderPath);
+                    StructureNodeReplacer.Replace(cloner.RootFolderClone, RootFolderCSharp);
+
                     DotNetTransformer.MoveGlobalSymbolsToClasses(GlobalNamespaceCSharp);
                 }
                 catch (Exception ex)
@@ -111,6 +118,24 @@ namespace DotNetWrapperGen.Project
                     //WrapperEvent.Invoke(this, new WrapperProjectEventArgs(WrapperProjectEvent.LogMessage, ex.ToString()));
                 }
                 SetStatus(WrapperStatus.TransformingCppDone);
+            });
+        }
+
+        public void WriteWrapperAsync()
+        {
+            WorkAsync((s, e) =>
+            {
+                SetStatus(WrapperStatus.WritingWrapper);
+                try
+                {
+                    var writer = new CSharpWriter(this);
+                    writer.Write();
+                }
+                catch (Exception ex)
+                {
+                    //WrapperEvent.Invoke(this, new WrapperProjectEventArgs(WrapperProjectEvent.LogMessage, ex.ToString()));
+                }
+                SetStatus(WrapperStatus.WritingWrapperDone);
             });
         }
 
@@ -158,7 +183,7 @@ namespace DotNetWrapperGen.Project
             writer.WriteStartElement(name);
             if (item == RootFolder)
             {
-                writer.WriteAttributeString("Name", MakeRelativePath(xmlFilePath, item.Name));
+                writer.WriteAttributeString("Name", PathUtility.MakeRelativePath(xmlFilePath, item.Name));
             }
             else
             {
@@ -176,27 +201,6 @@ namespace DotNetWrapperGen.Project
             }
 
             writer.WriteEndElement();
-        }
-
-        public static string MakeRelativePath(string fromPath, string toPath)
-        {
-            if (string.IsNullOrEmpty(fromPath)) throw new ArgumentNullException("fromPath");
-            if (string.IsNullOrEmpty(toPath)) throw new ArgumentNullException("toPath");
-
-            var fromUri = new Uri(fromPath);
-            var toUri = new Uri(toPath);
-
-            if (fromUri.Scheme != toUri.Scheme) { return toPath; } // path can't be made relative.
-
-            var relativeUri = fromUri.MakeRelativeUri(toUri);
-            var relativePath = Uri.UnescapeDataString(relativeUri.ToString());
-
-            if (toUri.Scheme.ToUpperInvariant() == "FILE")
-            {
-                relativePath = relativePath.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
-            }
-
-            return relativePath;
         }
     }
 
