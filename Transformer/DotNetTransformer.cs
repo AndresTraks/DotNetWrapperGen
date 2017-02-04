@@ -7,7 +7,7 @@ namespace DotNetWrapperGen.Transformer
     public class DotNetTransformer
     {
         // In C#, namespaces cannot contain fields or methods, move them into classes.
-        public static void MoveSymbolsToClasses(NamespaceDefinition @namespace)
+        public static void MoveGlobalSymbolsToClasses(NamespaceDefinition @namespace)
         {
             var methods = @namespace.Children.OfType<MethodDefinition>().ToList();
             foreach (var method in methods)
@@ -20,7 +20,7 @@ namespace DotNetWrapperGen.Transformer
             var childNamespaces = @namespace.Children.Where(c => c is NamespaceDefinition);
             foreach (var childNamespace in @namespace.Children.OfType<NamespaceDefinition>())
             {
-                MoveSymbolsToClasses(childNamespace);
+                MoveGlobalSymbolsToClasses(childNamespace);
             }
         }
     }

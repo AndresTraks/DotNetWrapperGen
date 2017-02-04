@@ -22,7 +22,8 @@ namespace DotNetWrapperGen.View
         {
             InitializeComponent();
 
-            recentList.Controls.Add(CreateRecentLink("Bullet", "D:\\src\\DotNetWrapperGen\\bin\\Debug\\Bullet.xml", 0));
+            var path = Path.Combine("D:\\src", "DotNetWrapperGen\\bin\\Debug\\Bullet.xml");
+            recentList.Controls.Add(CreateRecentLink("Bullet", path, 0));
 
             sourceFolder.TextChanged += sourceFolder_TextChanged;
             sourceFolder.KeyDown += sourceFolder_KeyDown;

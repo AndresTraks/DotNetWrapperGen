@@ -2,6 +2,7 @@
 using DotNetWrapperGen.CodeStructure;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DotNetWrapperGen.Transformer
 {
@@ -10,15 +11,14 @@ namespace DotNetWrapperGen.Transformer
         private IDictionary<SourceItemDefinition, SourceItemDefinition> _oldToNewMapping =
             new Dictionary<SourceItemDefinition, SourceItemDefinition>();
 
-        private StructureCloner()
-        {
-        }
+        public NamespaceDefinition RootNamespaceClone { get; private set; }
+        public RootFolderDefinition RootFolderClone { get; private set; }
 
-        public static NamespaceDefinition Clone(NamespaceDefinition globalNamespace)
+        public void Clone(NamespaceDefinition globalNamespace)
         {
             var clone = globalNamespace.Clone() as NamespaceDefinition;
-            new StructureCloner().CloneNodeWithStructure(clone);
-            return clone;
+            CloneNodeWithStructure(clone);
+            RootNamespaceClone = clone;
         }
 
         private void CloneNodeWithStructure(ModelNodeDefinition node)
@@ -58,14 +58,22 @@ namespace DotNetWrapperGen.Transformer
             else if (item is RootFolderDefinition)
             {
                 clone = new RootFolderDefinition(item.Name);
+                RootFolderClone = RootFolderClone ?? clone as RootFolderDefinition;
             }
             else
             {
                 throw new NotSupportedException();
             }
-            clone.Parent = CloneSourceItem(item.Parent);
 
             _oldToNewMapping[item] = clone;
+
+            clone.Parent = CloneSourceItem(item.Parent);
+            foreach (SourceItemDefinition child in item.Children.Where(c => !c.IsExcluded))
+            {
+                var childClone = CloneSourceItem(child);
+                clone.Children.Add(childClone);
+            }
+
             return clone;
         }
 

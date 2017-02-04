@@ -77,6 +77,7 @@ namespace DotNetWrapperGen.View
                     Project.TransformAsync();
                     break;
                 case WrapperStatus.TransformingCppDone:
+                    csharpFilesTab.SetData(Project.RootFolderCSharp);
                     csharpClassesTab.SetData(Project);
                     Log("Done\r\n");
                     break;

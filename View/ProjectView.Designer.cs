@@ -39,7 +39,7 @@
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cppFilesTab = new DotNetWrapperGen.View.CppFilesTab();
             this.cppClassesTab = new DotNetWrapperGen.View.CppClassesTab();
-            this.csharpFilesTab = new DotNetWrapperGen.View.CSharpFilesTab();
+            this.csharpFilesTab = new DotNetWrapperGen.View.CppFilesTab();
             this.csharpClassesTab = new DotNetWrapperGen.View.CSharpClassesTab();
             this.tabControl1.SuspendLayout();
             this.cppFilesTabPlaceHolder.SuspendLayout();
@@ -215,7 +215,7 @@
         private CppFilesTab cppFilesTab;
         private CppClassesTab cppClassesTab;
         private System.Windows.Forms.TabPage csharpClassesPlaceHolder;
-        private CSharpFilesTab csharpFilesTab;
+        private CppFilesTab csharpFilesTab;
         private CSharpClassesTab csharpClassesTab;
     }
 }

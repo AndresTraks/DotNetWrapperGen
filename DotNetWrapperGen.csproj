@@ -94,12 +94,6 @@
     <Compile Include="View\CSharpClassesTab.Designer.cs">
       <DependentUpon>CSharpClassesTab.cs</DependentUpon>
     </Compile>
-    <Compile Include="View\CSharpFilesTab.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="View\CSharpFilesTab.Designer.cs">
-      <DependentUpon>CSharpFilesTab.cs</DependentUpon>
-    </Compile>
     <Compile Include="View\ProjectView.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -115,6 +109,7 @@
       <DependentUpon>StartWizard.cs</DependentUpon>
     </Compile>
     <Compile Include="View\SourceItemPropertyPage.cs" />
+    <Compile Include="Writer\CSharpWriter.cs" />
     <EmbeddedResource Include="View\CppClassesTab.resx">
       <DependentUpon>CppClassesTab.cs</DependentUpon>
     </EmbeddedResource>
@@ -123,9 +118,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="View\CSharpClassesTab.resx">
       <DependentUpon>CSharpClassesTab.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="View\CSharpFilesTab.resx">
-      <DependentUpon>CSharpFilesTab.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\ProjectView.resx">
       <DependentUpon>ProjectView.cs</DependentUpon>

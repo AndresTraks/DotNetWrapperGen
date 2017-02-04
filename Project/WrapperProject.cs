@@ -50,6 +50,7 @@ namespace DotNetWrapperGen.Project
         public string FullProjectPath { get; set; }
         public string NamespaceName { get; set; }
         public RootFolderDefinition RootFolder { get; set; }
+        public RootFolderDefinition RootFolderCSharp { get; set; }
         public NamespaceDefinition GlobalNamespaceCpp { get; private set; }
         public NamespaceDefinition GlobalNamespaceCSharp { get; private set; }
 
@@ -99,8 +100,11 @@ namespace DotNetWrapperGen.Project
                 SetStatus(WrapperStatus.TransformingCpp);
                 try
                 {
-                    GlobalNamespaceCSharp = StructureCloner.Clone(GlobalNamespaceCpp);
-                    DotNetTransformer.MoveSymbolsToClasses(GlobalNamespaceCSharp);
+                    var cloner = new StructureCloner();
+                    cloner.Clone(GlobalNamespaceCpp);
+                    GlobalNamespaceCSharp = cloner.RootNamespaceClone;
+                    RootFolderCSharp = cloner.RootFolderClone;
+                    DotNetTransformer.MoveGlobalSymbolsToClasses(GlobalNamespaceCSharp);
                 }
                 catch (Exception ex)
                 {
@@ -139,7 +143,7 @@ namespace DotNetWrapperGen.Project
         {
             FullProjectPath = Path.GetDirectoryName(inputPath);
 
-            ProjectFileLoader loader = new ProjectFileLoader();
+            var loader = new ProjectFileLoader();
             RootFolder = loader.Load(inputPath);
             FullSourcePath = RootFolder.FullPath;
             SetStatus(WrapperStatus.ReadingHeadersDone);
