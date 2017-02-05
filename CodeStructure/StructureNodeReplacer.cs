@@ -14,7 +14,7 @@ namespace DotNetWrapperGen.CodeStructure
             with.Parent = replace.Parent;
             foreach (SourceItemDefinition child in replace.Children)
             {
-                with.Children.Add(child);
+                with.AddChild(child);
             }
 
             replace.Parent = null;

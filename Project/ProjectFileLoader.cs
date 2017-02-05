@@ -76,23 +76,17 @@ namespace DotNetWrapperGen.Project
 
                     if (reader.Name.Equals("Folder"))
                     {
-                        item = new FolderDefinition(name)
-                        {
-                            Parent = parentFolder
-                        };
+                        item = new FolderDefinition(name);
                     }
                     else if (reader.Name.Equals("Header"))
                     {
-                        item = new HeaderDefinition(name)
-                        {
-                            Parent = parentFolder
-                        };
+                        item = new HeaderDefinition(name);
                     }
                     else
                     {
                         throw new NotImplementedException();
                     }
-                    parentFolder.Children.Add(item);
+                    parentFolder.AddChild(item);
 
                     item.IsExcluded = isExcluded;
 

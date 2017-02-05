@@ -40,6 +40,7 @@
     <Compile Include="CodeModel\CodeModelTests.cs" />
     <Compile Include="CodeModel\VcppNameDecoratorTests.cs" />
     <Compile Include="CodeStructure\CodeStructureTests.cs" />
+    <Compile Include="CodeStructure\StructureNodeReplacerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -19,11 +19,8 @@ namespace DotNetWrapperGen.Tests.CodeModel
 
             var rootFolder = new RootFolderDefinition(path);
 
-            var header = new HeaderDefinition("header1.h")
-            {
-                Parent = rootFolder
-            };
-            rootFolder.Children.Add(header);
+            var header = new HeaderDefinition("header1.h");
+            rootFolder.AddChild(header);
 
             NamespaceDefinition globalNamespace = new CppParser().ParseRootFolder(rootFolder);
 

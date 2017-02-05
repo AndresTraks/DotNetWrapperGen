@@ -18,10 +18,7 @@ namespace DotNetWrapperGen.CodeStructure
                 var headerFolder = CreateFoldersOnPath(path, rootFolder);
 
                 string fileName = Path.GetFileName(path);
-                headerFolder.Children.Add(new HeaderDefinition(fileName)
-                {
-                    Parent = headerFolder
-                });
+                headerFolder.AddChild(new HeaderDefinition(fileName));
             }
 
             return rootFolder;

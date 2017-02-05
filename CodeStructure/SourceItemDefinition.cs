@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace DotNetWrapperGen.CodeStructure
@@ -37,6 +38,12 @@ namespace DotNetWrapperGen.CodeStructure
                 }
                 return Name;
             }
+        }
+
+        public virtual void AddChild(SourceItemDefinition child)
+        {
+            child.Parent = this;
+            Children.Add(child);
         }
     }
 }
