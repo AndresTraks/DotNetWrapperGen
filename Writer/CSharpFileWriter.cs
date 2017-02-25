@@ -1,6 +1,8 @@
-﻿using DotNetWrapperGen.CodeStructure;
+﻿using DotNetWrapperGen.CodeModel;
+using DotNetWrapperGen.CodeStructure;
 using DotNetWrapperGen.Parser;
 using System.IO;
+using System.Linq;
 
 namespace DotNetWrapperGen.Writer
 {
@@ -29,15 +31,32 @@ namespace DotNetWrapperGen.Writer
 
         private void WriteNamespace(NamespaceTreeNode node)
         {
+            string name;
+
+            if (node.Children.Count == 1 && node.Nodes.Count == 0)
+            {
+                var child = node.Children[0];
+                if (node.Namespace.IsGlobal)
+                {
+                    name = child.Namespace.Name;
+                }
+                else
+                {
+                    name = $"{node.Namespace.Name}.{child.Namespace.Name}";
+                }
+                node = child;
+            }
+            else
+            {
+                name = node.Namespace.Name;
+            }
+
             var @namespace = node.Namespace;
 
-            if (!@namespace.IsGlobal)
-            {
-                _writer.Write("namespace ");
-                _writer.WriteLine(@namespace.Name);
-                _writer.WriteLine("{");
-                _writer.WriteLine("}");
-            }
+            _writer.Write("namespace ");
+            _writer.WriteLine(name);
+            _writer.WriteLine("{");
+            _writer.WriteLine("}");
 
             foreach (var childNamespace in node.Children)
             {
