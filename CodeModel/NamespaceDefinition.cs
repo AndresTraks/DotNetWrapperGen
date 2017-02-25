@@ -18,7 +18,7 @@ namespace DotNetWrapperGen.CodeModel
         }
 
         public IEnumerable<NamespaceDefinition> Namespaces => Children.OfType<NamespaceDefinition>();
-        public bool IsGlobal => string.IsNullOrEmpty(Name);
+        public bool IsGlobal => string.Equals(Name, string.Empty);
 
         public string FullName
         {
@@ -55,7 +55,9 @@ namespace DotNetWrapperGen.CodeModel
 
         public override string ToString()
         {
-            return Name;
+            return IsGlobal
+                ? "<global>"
+                : Name;
         }
 
         public override void AddChild(ModelNodeDefinition child)

@@ -59,6 +59,7 @@
     <Compile Include="CodeModel\NamespaceDefinition.cs" />
     <Compile Include="Parser\CppParserContext.cs" />
     <Compile Include="Parser\FieldParser.cs" />
+    <Compile Include="Parser\HeaderNamespaceTree.cs" />
     <Compile Include="Parser\MethodParser.cs" />
     <Compile Include="Parser\VcppNameDecorator.cs" />
     <Compile Include="CodeStructure\FolderDefinition.cs" />
@@ -112,7 +113,8 @@
       <DependentUpon>StartWizard.cs</DependentUpon>
     </Compile>
     <Compile Include="View\SourceItemPropertyPage.cs" />
-    <Compile Include="Writer\CSharpWriter.cs" />
+    <Compile Include="Writer\CSharpFileWriter.cs" />
+    <Compile Include="Writer\CSharpProjectWriter.cs" />
     <EmbeddedResource Include="View\CppClassesTab.resx">
       <DependentUpon>CppClassesTab.cs</DependentUpon>
     </EmbeddedResource>

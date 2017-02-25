@@ -1,7 +1,6 @@
 ﻿using DotNetWrapperGen.CodeStructure;
 using DotNetWrapperGen.Project;
 using System.IO;
-using System;
 
 namespace DotNetWrapperGen.Writer
 {
@@ -47,9 +46,13 @@ namespace DotNetWrapperGen.Writer
 
         private void WriteHeader(HeaderDefinition header)
         {
-            using (var stream = File.Create(header.FullPath))
+            if (header.Nodes.Count == 0)
             {
+                return;
             }
+
+            var fileWriter = new CSharpFileWriter(header);
+            fileWriter.Write();
         }
     }
 }
