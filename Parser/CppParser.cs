@@ -165,7 +165,7 @@ namespace DotNetWrapperGen.Parser
             parent.AddChild(_context.Class);
             if (parent is NamespaceDefinition)
             {
-                _context.Class.Header = _context.Header;
+                _context.Header.AddNode(_context.Class);
             }
 
             cursor.VisitChildren(HeaderVisitor);

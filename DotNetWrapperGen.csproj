@@ -76,6 +76,7 @@
     <Compile Include="CodeModel\TypeRefDefinition.cs" />
     <Compile Include="Project\ProjectFileLoader.cs" />
     <Compile Include="Project\WrapperProject.cs" />
+    <Compile Include="Transformer\BulletTransformer.cs" />
     <Compile Include="Transformer\DotNetTransformer.cs" />
     <Compile Include="Transformer\StructureCloner.cs" />
     <Compile Include="View\CppClassesTab.cs">

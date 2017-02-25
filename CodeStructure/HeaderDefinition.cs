@@ -26,6 +26,12 @@ namespace DotNetWrapperGen.CodeStructure
             set { _managedName = value; }
         }
 
+        public void AddNode(ModelNodeDefinition node)
+        {
+            Nodes.Add(node);
+            node.Header = this;
+        }
+
         public override string ToString()
         {
             return Name;

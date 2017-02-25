@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace DotNetWrapperGen.CodeStructure
@@ -15,7 +14,7 @@ namespace DotNetWrapperGen.CodeStructure
 
         public abstract bool IsFolder { get; }
         public bool IsExcluded { get; set; }
-        public string Name { get; }
+        public string Name { get; set; }
         public IList<SourceItemDefinition> Children { get; } = new List<SourceItemDefinition>();
 
         public SourceItemDefinition Parent
