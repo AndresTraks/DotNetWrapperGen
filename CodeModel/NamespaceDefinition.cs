@@ -60,11 +60,6 @@ namespace DotNetWrapperGen.CodeModel
                 : Name;
         }
 
-        public override void AddChild(ModelNodeDefinition child)
-        {
-            base.AddChild(child);
-        }
-
         public override object Clone()
         {
             var node = new NamespaceDefinition(Name);

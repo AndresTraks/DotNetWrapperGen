@@ -16,13 +16,13 @@ namespace DotNetWrapperGen.Writer
 
         public void Write()
         {
-            var globalNamespace = HeaderNamespaceTree.GetTree(_header);
+            var namespaceTree = HeaderNamespaceTree.GetTree(_header);
 
             using (var stream = File.Create(_header.FullPath))
             {
                 using (_writer = new StreamWriter(stream))
                 {
-                    WriteNamespace(globalNamespace);
+                    WriteNamespace(namespaceTree);
                 }
             }
         }

@@ -112,7 +112,7 @@ namespace DotNetWrapperGen.Project
                     StructureNodeReplacer.Replace(cloner.RootFolderClone, RootFolderCSharp);
 
                     DotNetTransformer.MoveGlobalSymbolsToClasses(GlobalNamespaceCSharp);
-                    BulletTransformer.RenameHeaders(RootFolderCSharp);
+                    BulletTransformer.Transform(RootFolderCSharp, GlobalNamespaceCSharp);
                 }
                 catch (Exception ex)
                 {

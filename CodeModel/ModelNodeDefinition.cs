@@ -47,8 +47,19 @@ namespace DotNetWrapperGen.CodeModel
 
         public virtual void AddChild(ModelNodeDefinition child)
         {
+            if (child.Parent != null)
+            {
+                child.Parent.RemoveChild(child);
+            }
+
             child.Parent = this;
             Children.Add(child);
+        }
+
+        public virtual void RemoveChild(ModelNodeDefinition child)
+        {
+            Children.Remove(child);
+            child.Parent = null;
         }
 
         public abstract object Clone();
