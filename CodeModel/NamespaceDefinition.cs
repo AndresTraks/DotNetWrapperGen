@@ -7,12 +7,18 @@ namespace DotNetWrapperGen.CodeModel
 {
     public class NamespaceDefinition : ModelNodeDefinition
     {
+        public NamespaceDefinition()
+            : base(string.Empty)
+        {
+        }
+
         public NamespaceDefinition(string name)
             : base(name)
         {
         }
 
         public IEnumerable<NamespaceDefinition> Namespaces => Children.OfType<NamespaceDefinition>();
+        public bool IsGlobal => string.IsNullOrEmpty(Name);
 
         public string FullName
         {

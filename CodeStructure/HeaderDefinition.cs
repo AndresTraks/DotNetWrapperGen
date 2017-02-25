@@ -1,4 +1,5 @@
 ﻿using DotNetWrapperGen.CodeModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -28,6 +29,11 @@ namespace DotNetWrapperGen.CodeStructure
 
         public void AddNode(ModelNodeDefinition node)
         {
+            if (node is NamespaceDefinition)
+            {
+                throw new InvalidOperationException("Namespaces cannot be header child elements");
+            }
+
             Nodes.Add(node);
             node.Header = this;
         }

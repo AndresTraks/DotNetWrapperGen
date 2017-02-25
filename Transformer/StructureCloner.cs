@@ -16,6 +16,11 @@ namespace DotNetWrapperGen.Transformer
 
         public void Clone(NamespaceDefinition globalNamespace)
         {
+            if (!globalNamespace.IsGlobal)
+            {
+                throw new InvalidOperationException("Only global namespace can be cloned");
+            }
+
             var clone = globalNamespace.Clone() as NamespaceDefinition;
             CloneNodeWithStructure(clone);
             RootNamespaceClone = clone;
@@ -25,7 +30,8 @@ namespace DotNetWrapperGen.Transformer
         {
             if (IsTopLevelNodeInNamespace(node))
             {
-                node.Header = CloneSourceItem(node.Header) as HeaderDefinition;
+                var headerClone = CloneSourceItem(node.Header) as HeaderDefinition;
+                headerClone.AddNode(node);
             }
 
             foreach (var child in node.Children)
