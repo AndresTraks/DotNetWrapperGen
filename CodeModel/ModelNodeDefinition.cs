@@ -13,7 +13,7 @@ namespace DotNetWrapperGen.CodeModel
             Name = name;
         }
 
-        public string Name { get; }
+        public string Name { get; set; }
 
         public ModelNodeDefinition Parent { get; set; }
         public IList<ModelNodeDefinition> Children { get; } = new List<ModelNodeDefinition>();

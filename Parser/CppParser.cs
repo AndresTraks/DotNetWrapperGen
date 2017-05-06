@@ -2,6 +2,7 @@
 using DotNetWrapperGen.CodeModel;
 using DotNetWrapperGen.CodeStructure;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace DotNetWrapperGen.Parser
@@ -57,13 +58,9 @@ namespace DotNetWrapperGen.Parser
             _context.Header = header;
 
             var unsavedFiles = new UnsavedFile[] { };
-            string[] clangOptions = new[] {
-                "-x", "c++-header",
-                "-I", "." };
-
             using (_context.TranslationUnit = _context.Index.CreateTranslationUnit(
                 header.FullPath,
-                clangOptions,
+                GetClangOptions(),
                 unsavedFiles,
                 TranslationUnitFlags.SkipFunctionBodies))
             {
@@ -73,6 +70,35 @@ namespace DotNetWrapperGen.Parser
             }
 
             _context.Header = null;
+        }
+
+        private string[] GetClangOptions()
+        {
+            var options = new List<string> { "-x", "c++-header" };
+            HeaderDefinition header = _context.Header;
+            foreach (string includeFolder in GetItemIncludeFolders(header))
+            {
+                options.Add("-I");
+                options.Add(includeFolder);
+            }
+            return options.ToArray();
+        }
+
+        private IEnumerable<string> GetItemIncludeFolders(SourceItemDefinition item)
+        {
+            if (item == null)
+            {
+                return new string[0];
+            }
+
+            return item.IncludeFolders.SelectMany(i =>
+            {
+                if (string.Equals(i, "$(Inherited)"))
+                {
+                    return GetItemIncludeFolders(item.Parent);
+                }
+                return new[] { Path.Combine(item.FullPath, i) };
+            });
         }
 
         private Cursor.ChildVisitResult HeaderVisitor(Cursor cursor, Cursor parent)
@@ -115,6 +141,11 @@ namespace DotNetWrapperGen.Parser
                         FieldParser.Parse(cursor, _context);
                         break;
                 }
+            }
+
+            if (cursor.Kind == CursorKind.CxxBaseSpecifier)
+            {
+                _context.Class.BaseClass = new TypeRefDefinition(cursor.Type);
             }
 
             return Cursor.ChildVisitResult.Continue;

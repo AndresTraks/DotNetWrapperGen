@@ -119,7 +119,11 @@ namespace DotNetWrapperGen.View
         {
             sourceItemSettings.Enabled = true;
             var item = e.Node.Tag as SourceItemDefinition;
-            sourceItemSettings.SelectedObject = new SourceItemPropertyPage(item, e.Node);
+            sourceItemSettings.SelectedObject = new SourceItemPropertyPage
+            {
+                SourceItem = item,
+                SourceNode = e.Node
+            };
         }
 
         private void showExcludedButton_CheckedChanged(object sender, EventArgs e)

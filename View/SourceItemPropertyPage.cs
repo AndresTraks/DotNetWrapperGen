@@ -1,4 +1,5 @@
 ﻿using DotNetWrapperGen.CodeStructure;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
 
@@ -6,12 +7,6 @@ namespace DotNetWrapperGen.View
 {
     public class SourceItemPropertyPage
     {
-        public SourceItemPropertyPage(SourceItemDefinition sourceItem, TreeNode sourceNode)
-        {
-            SourceItem = sourceItem;
-            SourceNode = sourceNode;
-        }
-
         [Browsable(false)]
         public SourceItemDefinition SourceItem { get; set; }
         [Browsable(false)]
@@ -22,6 +17,12 @@ namespace DotNetWrapperGen.View
         {
             get { return SourceItem.IsExcluded; }
             set { SourceItem.IsExcluded = value; }
+        }
+
+        [Description("Folders where to search for included header files."), Category("General")]
+        public BindingList<string> IncludeFolders
+        {
+            get { return new BindingList<string>(SourceItem.IncludeFolders); }
         }
     }
 }

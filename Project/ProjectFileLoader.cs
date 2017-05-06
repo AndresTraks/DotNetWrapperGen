@@ -16,14 +16,14 @@ namespace DotNetWrapperGen.Project
                 {
                     if (reader.NodeType == XmlNodeType.Element && reader.Name.Equals("WrapperProject"))
                     {
-                        rootFolder = LoadProject(reader);
+                        rootFolder = ReadProject(reader);
                     }
                 }
             }
             return rootFolder;
         }
 
-        private RootFolderDefinition LoadProject(XmlReader reader)
+        private RootFolderDefinition ReadProject(XmlReader reader)
         {
             RootFolderDefinition rootFolder = null;
             while (reader.Read())
@@ -32,14 +32,14 @@ namespace DotNetWrapperGen.Project
                 {
                     if (reader.Name.Equals("CppCodeModel"))
                     {
-                        rootFolder = LoadRootFolder(reader);
+                        rootFolder = ReadRootFolder(reader);
                     }
                 }
             }
             return rootFolder;
         }
 
-        private RootFolderDefinition LoadRootFolder(XmlReader reader)
+        private RootFolderDefinition ReadRootFolder(XmlReader reader)
         {
             RootFolderDefinition rootFolder = null;
             while (reader.Read())
@@ -57,42 +57,71 @@ namespace DotNetWrapperGen.Project
                             IsExcluded = isExcluded
                         };
 
-                        LoadSourceItems(reader, rootFolder);
+                        ReadSourceItems(reader, rootFolder);
                     }
                 }
             }
             return rootFolder;
         }
 
-        private void LoadSourceItems(XmlReader reader, SourceItemDefinition parentFolder)
+        private void ReadSourceItems(XmlReader reader, SourceItemDefinition parent)
         {
             while (reader.Read())
             {
                 if (reader.NodeType == XmlNodeType.Element)
                 {
-                    SourceItemDefinition item;
-                    var name = reader.GetAttribute("Name");
-                    var isExcluded = "true".Equals(reader.GetAttribute("IsExcluded"));
+                    switch (reader.Name)
+                    {
+                        case "Folder":
+                        case "Header":
+                            {
+                                SourceItemDefinition item;
+                                var name = reader.GetAttribute("Name");
+                                var isExcluded = "true".Equals(reader.GetAttribute("IsExcluded"));
 
-                    if (reader.Name.Equals("Folder"))
-                    {
-                        item = new FolderDefinition(name);
-                    }
-                    else if (reader.Name.Equals("Header"))
-                    {
-                        item = new HeaderDefinition(name);
-                    }
-                    else
-                    {
-                        throw new NotImplementedException();
-                    }
-                    parentFolder.AddChild(item);
+                                if (reader.Name.Equals("Folder"))
+                                {
+                                    item = new FolderDefinition(name);
+                                }
+                                else // if (reader.Name.Equals("Header"))
+                                {
+                                    item = new HeaderDefinition(name);
+                                }
 
-                    item.IsExcluded = isExcluded;
+                                parent.AddChild(item);
 
-                    if (item.IsFolder)
+                                item.IsExcluded = isExcluded;
+
+                                if (item.IsFolder)
+                                {
+                                    ReadSourceItems(reader, item);
+                                }
+                            }
+                            break;
+                        case "IncludeFolder":
+                            ReadIncludeFolder(reader, parent);
+                            break;
+                        default:
+                            throw new NotImplementedException();
+                    }
+                }
+                else if (reader.NodeType == XmlNodeType.EndElement)
+                {
+                    return;
+                }
+            }
+        }
+
+        public void ReadIncludeFolder(XmlReader reader, SourceItemDefinition item)
+        {
+            while (reader.Read())
+            {
+                if (reader.NodeType == XmlNodeType.Text)
+                {
+                    if (item.HasDefaultIncludeFolders)
                     {
-                        LoadSourceItems(reader, item);
+                        item.IncludeFolders.Clear();
+                        item.IncludeFolders.Add(reader.Value);
                     }
                 }
                 else if (reader.NodeType == XmlNodeType.EndElement)

@@ -11,6 +11,7 @@ namespace DotNetWrapperGen.Transformer
         public static void Transform(RootFolderDefinition rootFolder, NamespaceDefinition globalNamespace)
         {
             RenameHeaders(rootFolder);
+            RenameClasses(globalNamespace);
             MoveGlobalNodes(globalNamespace);
         }
 
@@ -24,6 +25,19 @@ namespace DotNetWrapperGen.Transformer
             foreach (var child in item.Children)
             {
                 RenameHeaders(child);
+            }
+        }
+
+        private static void RenameClasses(ModelNodeDefinition node)
+        {
+            if (node.Name.StartsWith("bt"))
+            {
+                node.Name = node.Name.Substring(2);
+            }
+
+            foreach (var child in node.Children)
+            {
+                RenameClasses(child);
             }
         }
 

@@ -196,12 +196,27 @@ namespace DotNetWrapperGen.Project
                 writer.WriteAttributeString("IsExcluded", "true");
             }
 
+            if (!item.HasDefaultIncludeFolders)
+            {
+                WriteIncludeFolders(writer, item);
+            }
+
             foreach (var child in item.Children)
             {
                 WriteSourceItemXml(writer, child);
             }
 
             writer.WriteEndElement();
+        }
+
+        private void WriteIncludeFolders(XmlWriter writer, SourceItemDefinition item)
+        {
+            foreach (string includeFolder in item.IncludeFolders)
+            {
+                writer.WriteStartElement("IncludeFolder");
+                writer.WriteString(includeFolder);
+                writer.WriteEndElement();
+            }
         }
     }
 

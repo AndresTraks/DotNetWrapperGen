@@ -16,6 +16,7 @@ namespace DotNetWrapperGen.CodeStructure
         public bool IsExcluded { get; set; }
         public string Name { get; set; }
         public IList<SourceItemDefinition> Children { get; } = new List<SourceItemDefinition>();
+        public IList<string> IncludeFolders { get; set; } = new List<string> { "$(Inherited)" };
 
         public SourceItemDefinition Parent
         {
@@ -37,6 +38,11 @@ namespace DotNetWrapperGen.CodeStructure
                 }
                 return Name;
             }
+        }
+
+        public bool HasDefaultIncludeFolders
+        {
+            get { return IncludeFolders.Count == 1 && string.Equals(IncludeFolders[0], "$(Inherited)"); }
         }
 
         public virtual void AddChild(SourceItemDefinition child)

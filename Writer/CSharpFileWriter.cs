@@ -2,7 +2,6 @@
 using DotNetWrapperGen.CodeStructure;
 using DotNetWrapperGen.Parser;
 using System.IO;
-using System.Linq;
 
 namespace DotNetWrapperGen.Writer
 {
@@ -18,9 +17,12 @@ namespace DotNetWrapperGen.Writer
 
         public void Write()
         {
-            var namespaceTree = HeaderNamespaceTree.GetTree(_header);
+            NamespaceTreeNode namespaceTree = HeaderNamespaceTree.GetTree(_header);
 
-            using (var stream = File.Create(_header.FullPath))
+            string csPath = Path.Combine(Path.GetDirectoryName(_header.FullPath),
+                Path.GetFileNameWithoutExtension(_header.FullPath) + ".cs");
+
+            using (var stream = File.Create(csPath))
             {
                 using (_writer = new StreamWriter(stream))
                 {
@@ -53,14 +55,31 @@ namespace DotNetWrapperGen.Writer
 
             var @namespace = node.Namespace;
 
-            _writer.Write("namespace ");
-            _writer.WriteLine(name);
+            _writer.WriteLine($"namespace {name}");
             _writer.WriteLine("{");
+
+            foreach (ModelNodeDefinition childNode in node.Nodes)
+            {
+                WriteNode(childNode);
+            }
+
             _writer.WriteLine("}");
 
             foreach (var childNamespace in node.Children)
             {
                 WriteNamespace(childNamespace);
+            }
+        }
+
+        private void WriteNode(ModelNodeDefinition childNode)
+        {
+            var @class = childNode as ClassDefinition;
+            if (@class != null)
+            {
+                var abstractSpecifier = @class.IsAbstract ? "abstract " : null;
+                _writer.WriteLine($"\tpublic {abstractSpecifier}class {childNode.Name}");
+                _writer.WriteLine("\t{");
+                _writer.WriteLine("\t}");
             }
         }
     }
