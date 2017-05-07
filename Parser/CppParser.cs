@@ -1,6 +1,7 @@
 ﻿using ClangSharp;
 using DotNetWrapperGen.CodeModel;
 using DotNetWrapperGen.CodeStructure;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -103,7 +104,7 @@ namespace DotNetWrapperGen.Parser
 
         private Cursor.ChildVisitResult HeaderVisitor(Cursor cursor, Cursor parent)
         {
-            string headerPath = cursor.Extent.Start.File.Name;
+            string headerPath = cursor.Location.File.Name;
             if (IsExternalHeader(headerPath))
             {
                 return Cursor.ChildVisitResult.Continue;
@@ -153,7 +154,15 @@ namespace DotNetWrapperGen.Parser
 
         private bool IsExternalHeader(string headerPath)
         {
-            return !headerPath.StartsWith(_context.RootFolder.FullPath);
+            return !ArePathsEqual(headerPath, _context.Header.FullPath);
+        }
+
+        private bool ArePathsEqual(string path1, string path2)
+        {
+            return string.Compare(
+                Path.GetFullPath(path1).TrimEnd('\\'),
+                Path.GetFullPath(path2).TrimEnd('\\'),
+                StringComparison.InvariantCultureIgnoreCase) == 0;
         }
 
         private void ParseNamespace(Cursor cursor)

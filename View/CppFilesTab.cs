@@ -1,5 +1,4 @@
-﻿using DotNetWrapperGen.CodeModel;
-using DotNetWrapperGen.CodeStructure;
+﻿using DotNetWrapperGen.CodeStructure;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

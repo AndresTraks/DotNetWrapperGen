@@ -7,7 +7,7 @@ namespace DotNetWrapperGen.Writer
 {
     public class CSharpFileWriter
     {
-        private HeaderDefinition _header;
+        private readonly HeaderDefinition _header;
         private StreamWriter _writer;
 
         public CSharpFileWriter(HeaderDefinition header)
@@ -77,8 +77,11 @@ namespace DotNetWrapperGen.Writer
             if (@class != null)
             {
                 var abstractSpecifier = @class.IsAbstract ? "abstract " : null;
+                var baseClassSpecifier = @class.BaseClass != null ? @class.BaseClass.ManagedName : null;
+
                 _writer.WriteLine($"\tpublic {abstractSpecifier}class {childNode.Name}");
                 _writer.WriteLine("\t{");
+
                 _writer.WriteLine("\t}");
             }
         }
