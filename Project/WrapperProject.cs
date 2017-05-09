@@ -111,9 +111,8 @@ namespace DotNetWrapperGen.Project
                     RootFolderCSharp = new RootFolderDefinition(csharpRootFolderPath);
                     StructureNodeReplacer.Replace(cloner.RootFolderClone, RootFolderCSharp);
 
-                    DotNetTransformer.MoveGlobalSymbolsToClasses(GlobalNamespaceCSharp);
-                    DotNetTransformer.RenameCodeFiles(RootFolderCSharp);
-                    BulletTransformer.Transform(RootFolderCSharp, GlobalNamespaceCSharp);
+                    new DotNetTransformer().Transform(GlobalNamespaceCSharp, RootFolderCSharp);
+                    new BulletTransformer().Transform(GlobalNamespaceCSharp, RootFolderCSharp);
                 }
                 catch (Exception ex)
                 {

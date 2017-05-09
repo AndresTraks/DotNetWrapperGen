@@ -4,11 +4,11 @@ using System.Linq;
 
 namespace DotNetWrapperGen.Transformer
 {
-    public class BulletTransformer
+    public class BulletTransformer : ITransformer
     {
         private const string DefaultNamespace = "BulletSharp";
 
-        public static void Transform(RootFolderDefinition rootFolder, NamespaceDefinition globalNamespace)
+        public void Transform(NamespaceDefinition globalNamespace, RootFolderDefinition rootFolder)
         {
             RenameHeaders(rootFolder);
             RenameClasses(globalNamespace);

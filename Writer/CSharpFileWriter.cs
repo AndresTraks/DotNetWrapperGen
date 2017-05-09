@@ -96,9 +96,14 @@ namespace DotNetWrapperGen.Writer
             }
         }
 
-        private void WriteMethod(MethodDefinition constructor)
+        private void WriteMethod(MethodDefinition method)
         {
-            _writer.WriteLine($"\t\t{constructor.ManagedName}()");
+            if (method.IsExcluded)
+            {
+                return;
+            }
+
+            _writer.WriteLine($"\t\t{method.ManagedName}()");
             _writer.WriteLine("\t\t{");
             _writer.WriteLine("\t\t}");
         }

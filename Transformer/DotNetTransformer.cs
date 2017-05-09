@@ -6,8 +6,15 @@ using System.Linq;
 
 namespace DotNetWrapperGen.Transformer
 {
-    public class DotNetTransformer
+    public class DotNetTransformer : ITransformer
     {
+        public void Transform(NamespaceDefinition globalNamespace, RootFolderDefinition rootFolder)
+        {
+            RenameCodeFiles(rootFolder);
+            MoveGlobalSymbolsToClasses(globalNamespace);
+            new OperatorTransformer().Transform(globalNamespace, rootFolder);
+        }
+
         // In C#, namespaces cannot contain fields or methods, move them into classes.
         public static void MoveGlobalSymbolsToClasses(NamespaceDefinition @namespace)
         {

@@ -14,6 +14,7 @@ namespace DotNetWrapperGen.CodeModel
         }
 
         public string Name { get; set; }
+        public bool IsExcluded { get; set; }
 
         public ModelNodeDefinition Parent { get; set; }
         public IList<ModelNodeDefinition> Children { get; } = new List<ModelNodeDefinition>();
