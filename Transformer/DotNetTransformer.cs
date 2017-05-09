@@ -1,5 +1,7 @@
 ﻿using DotNetWrapperGen.CodeModel;
+using DotNetWrapperGen.CodeStructure;
 using System;
+using System.IO;
 using System.Linq;
 
 namespace DotNetWrapperGen.Transformer
@@ -21,6 +23,22 @@ namespace DotNetWrapperGen.Transformer
             foreach (var childNamespace in @namespace.Children.OfType<NamespaceDefinition>())
             {
                 MoveGlobalSymbolsToClasses(childNamespace);
+            }
+        }
+
+        public static void RenameCodeFiles(SourceItemDefinition item)
+        {
+            var header = item as HeaderDefinition;
+            if (header != null)
+            {
+                header.Name = Path.GetFileNameWithoutExtension(header.FullPath) + ".cs";
+            }
+            else
+            {
+                foreach (SourceItemDefinition child in item.Children)
+                {
+                    RenameCodeFiles(child);
+                }
             }
         }
     }

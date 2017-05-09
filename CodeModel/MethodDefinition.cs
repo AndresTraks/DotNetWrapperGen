@@ -80,7 +80,10 @@ namespace DotNetWrapperGen.CodeModel
 
         public override object Clone()
         {
-            return new MethodDefinition(Name, Parameters.Select(p => p.Clone()).ToArray());
+            return new MethodDefinition(Name, Parameters.Select(p => p.Clone()).ToArray())
+            {
+                IsConstructor = IsConstructor
+            };
         }
     }
 }

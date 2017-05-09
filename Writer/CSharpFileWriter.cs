@@ -2,6 +2,7 @@
 using DotNetWrapperGen.CodeStructure;
 using DotNetWrapperGen.Parser;
 using System.IO;
+using System.Linq;
 
 namespace DotNetWrapperGen.Writer
 {
@@ -19,10 +20,7 @@ namespace DotNetWrapperGen.Writer
         {
             NamespaceTreeNode namespaceTree = HeaderNamespaceTree.GetTree(_header);
 
-            string csPath = Path.Combine(Path.GetDirectoryName(_header.FullPath),
-                Path.GetFileNameWithoutExtension(_header.FullPath) + ".cs");
-
-            using (var stream = File.Create(csPath))
+            using (var stream = File.Create(_header.FullPath))
             {
                 using (_writer = new StreamWriter(stream))
                 {
@@ -82,8 +80,27 @@ namespace DotNetWrapperGen.Writer
                 _writer.WriteLine($"\tpublic {abstractSpecifier}class {childNode.Name}");
                 _writer.WriteLine("\t{");
 
+                var constructors = @class.Methods.Where(m => m.IsConstructor);
+                foreach (MethodDefinition constructor in constructors)
+                {
+                    WriteMethod(constructor);
+                }
+
+                var methods = @class.Methods.Where(m => !m.IsConstructor);
+                foreach (MethodDefinition method in methods)
+                {
+                    WriteMethod(method);
+                }
+
                 _writer.WriteLine("\t}");
             }
+        }
+
+        private void WriteMethod(MethodDefinition constructor)
+        {
+            _writer.WriteLine($"\t\t{constructor.ManagedName}()");
+            _writer.WriteLine("\t\t{");
+            _writer.WriteLine("\t\t}");
         }
     }
 }
