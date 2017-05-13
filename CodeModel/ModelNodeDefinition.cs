@@ -48,6 +48,8 @@ namespace DotNetWrapperGen.CodeModel
 
         public virtual void AddChild(ModelNodeDefinition child)
         {
+            AssertNoHierarchyCycle(child);
+
             if (child.Parent != null)
             {
                 child.Parent.RemoveChild(child);
@@ -64,5 +66,18 @@ namespace DotNetWrapperGen.CodeModel
         }
 
         public abstract object Clone();
+
+        private void AssertNoHierarchyCycle(ModelNodeDefinition nodeToAdd)
+        {
+            var parent = this;
+            while (parent != null)
+            {
+                if (parent == nodeToAdd)
+                {
+                    throw new InvalidOperationException("Cannot create node hierarchy cycle");
+                }
+                parent = parent.Parent;
+            }
+        }
     }
 }
