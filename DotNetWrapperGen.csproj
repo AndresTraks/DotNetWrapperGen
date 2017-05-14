@@ -115,8 +115,9 @@
       <DependentUpon>StartWizard.cs</DependentUpon>
     </Compile>
     <Compile Include="View\SourceItemPropertyPage.cs" />
-    <Compile Include="Writer\CSharpFileWriter.cs" />
-    <Compile Include="Writer\CSharpProjectWriter.cs" />
+    <Compile Include="Writer\CSharp\CSharpFileWriter.cs" />
+    <Compile Include="Writer\CSharp\CSharpMethodWriter.cs" />
+    <Compile Include="Writer\CSharp\CSharpProjectWriter.cs" />
     <EmbeddedResource Include="View\CppClassesTab.resx">
       <DependentUpon>CppClassesTab.cs</DependentUpon>
     </EmbeddedResource>

@@ -1,16 +1,16 @@
 ﻿using DotNetWrapperGen.CodeModel;
 using DotNetWrapperGen.CodeStructure;
 using DotNetWrapperGen.Parser;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace DotNetWrapperGen.Writer
+namespace DotNetWrapperGen.Writer.CSharp
 {
     public class CSharpFileWriter
     {
         private readonly HeaderDefinition _header;
         private StreamWriter _writer;
+        private CSharpMethodWriter _methodWriter;
 
         private string[] _nodeTypeOrder = new[] {
             "constructor",
@@ -31,6 +31,8 @@ namespace DotNetWrapperGen.Writer
             {
                 using (_writer = new StreamWriter(stream))
                 {
+                    _methodWriter = new CSharpMethodWriter(_writer);
+
                     WriteNamespace(namespaceTree);
                 }
             }
@@ -95,7 +97,7 @@ namespace DotNetWrapperGen.Writer
             var method = node as MethodDefinition;
             if (method != null)
             {
-                WriteMethod(method);
+                _methodWriter.Write(method);
             }
         }
 
@@ -132,18 +134,6 @@ namespace DotNetWrapperGen.Writer
                 return "field";
             }
             return "node";
-        }
-
-        private void WriteMethod(MethodDefinition method)
-        {
-            if (method.IsExcluded)
-            {
-                return;
-            }
-
-            _writer.WriteLine($"\t\t{method.ManagedName}()");
-            _writer.WriteLine("\t\t{");
-            _writer.WriteLine("\t\t}");
         }
     }
 }

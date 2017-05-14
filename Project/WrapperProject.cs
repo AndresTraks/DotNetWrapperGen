@@ -2,7 +2,7 @@
 using DotNetWrapperGen.CodeStructure;
 using DotNetWrapperGen.Parser;
 using DotNetWrapperGen.Transformer;
-using DotNetWrapperGen.Writer;
+using DotNetWrapperGen.Writer.CSharp;
 using System;
 using System.ComponentModel;
 using System.IO;
@@ -129,7 +129,7 @@ namespace DotNetWrapperGen.Project
                 SetStatus(WrapperStatus.WritingWrapper);
                 try
                 {
-                    var writer = new CSharpWriter(this);
+                    var writer = new CSharpProjectWriter(this);
                     writer.Write();
                 }
                 catch (Exception ex)

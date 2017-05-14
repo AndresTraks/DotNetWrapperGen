@@ -2,13 +2,13 @@
 using DotNetWrapperGen.Project;
 using System.IO;
 
-namespace DotNetWrapperGen.Writer
+namespace DotNetWrapperGen.Writer.CSharp
 {
-    public class CSharpWriter
+    public class CSharpProjectWriter
     {
         private WrapperProject _project;
 
-        public CSharpWriter(WrapperProject project)
+        public CSharpProjectWriter(WrapperProject project)
         {
             _project = project;
         }
