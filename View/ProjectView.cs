@@ -109,7 +109,11 @@ namespace DotNetWrapperGen.View
                 return;
             }
 
-            using (var writer = XmlWriter.Create(dialog.FileName))
+            var settings = new XmlWriterSettings
+            {
+                Indent = true
+            };
+            using (var writer = XmlWriter.Create(dialog.FileName, settings))
             {
                 writer.WriteStartElement("WrapperProject");
                 writer.WriteStartElement("CppCodeModel");

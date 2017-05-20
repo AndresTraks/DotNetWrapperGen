@@ -1,6 +1,7 @@
 ﻿using ClangSharp;
 using DotNetWrapperGen.CodeModel;
 using DotNetWrapperGen.CodeStructure;
+using DotNetWrapperGen.Parser;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,10 +15,7 @@ namespace DotNetWrapperGen.Parser
 
         public NamespaceDefinition ParseRootFolder(RootFolderDefinition rootFolder)
         {
-            _context = new CppParserContext(rootFolder);
-
-            var globalNamespace = new NamespaceDefinition("");
-            _context.Namespace = globalNamespace;
+            InitializeContext(rootFolder);
 
             using (_context.Index = new Index())
             {
@@ -28,7 +26,30 @@ namespace DotNetWrapperGen.Parser
                 _context.Index = null;
             }
 
-            return globalNamespace;
+            return _context.Namespace;
+        }
+
+        private void InitializeContext(RootFolderDefinition rootFolder)
+        {
+            _context = new CppParserContext(rootFolder)
+            {
+                NodeVisitor = HeaderVisitor
+            };
+
+            var classParser = new ClassParser();
+            var methodParser = new MethodParser();
+
+            _context.DefinitionParsers.Add(CursorKind.ClassDecl, classParser);
+            _context.DefinitionParsers.Add(CursorKind.ClassTemplate, classParser);
+            _context.DefinitionParsers.Add(CursorKind.EnumDecl, classParser);
+            _context.DefinitionParsers.Add(CursorKind.StructDecl, classParser);
+            _context.DefinitionParsers.Add(CursorKind.Namespace, new NamespaceParser());
+            _context.DeclarationParsers.Add(CursorKind.FieldDecl, new FieldParser());
+            _context.DeclarationParsers.Add(CursorKind.CxxMethod, methodParser);
+            _context.DeclarationParsers.Add(CursorKind.Constructor, methodParser);
+
+            var globalNamespace = new NamespaceDefinition("");
+            _context.Namespace = globalNamespace;
         }
 
         private void ParseSourceItem(SourceItemDefinition sourceItem)
@@ -112,35 +133,21 @@ namespace DotNetWrapperGen.Parser
 
             if (cursor.IsDefinition)
             {
-                switch (cursor.Kind)
+                IParser parser;
+                if (_context.DefinitionParsers.TryGetValue(cursor.Kind, out parser))
                 {
-                    case CursorKind.Namespace:
-                        ParseNamespace(cursor);
-                        break;
-                    case CursorKind.ClassDecl:
-                    case CursorKind.ClassTemplate:
-                    case CursorKind.EnumDecl:
-                    case CursorKind.StructDecl:
-                        ParseClass(cursor);
-                        break;
-                    case CursorKind.TypedefDecl:
-                        ParseTypedefCursor(cursor);
-                        break;
-
+                    parser.Parse(cursor, _context);
+                    return Cursor.ChildVisitResult.Continue;
                 }
             }
 
             if (cursor.IsDeclaration)
             {
-                switch (cursor.Kind)
+                IParser parser;
+                if (_context.DeclarationParsers.TryGetValue(cursor.Kind, out parser))
                 {
-                    case CursorKind.CxxMethod:
-                    case CursorKind.Constructor:
-                        MethodParser.Parse(cursor, _context);
-                        break;
-                    case CursorKind.FieldDecl:
-                        FieldParser.Parse(cursor, _context);
-                        break;
+                    parser.Parse(cursor, _context);
+                    return Cursor.ChildVisitResult.Continue;
                 }
             }
 
@@ -163,61 +170,6 @@ namespace DotNetWrapperGen.Parser
                 Path.GetFullPath(path1).TrimEnd('\\'),
                 Path.GetFullPath(path2).TrimEnd('\\'),
                 StringComparison.InvariantCultureIgnoreCase) == 0;
-        }
-
-        private void ParseNamespace(Cursor cursor)
-        {
-            string namespaceName = cursor.Spelling;
-            NamespaceDefinition @namespace = CreateOrGetNamespace(namespaceName);
-
-            NamespaceDefinition previousNamespace = _context.Namespace;
-            _context.Namespace = @namespace;
-            cursor.VisitChildren(HeaderVisitor);
-            _context.Namespace = previousNamespace;
-        }
-
-        private NamespaceDefinition CreateOrGetNamespace(string name)
-        {
-            var @namespace = _context.Namespace.Namespaces
-                                     .FirstOrDefault(n => n.Name == name);
-            if (@namespace == null)
-            {
-                @namespace = new NamespaceDefinition(name)
-                {
-                    Parent = _context.Namespace
-                };
-                _context.Namespace.Children.Add(@namespace);
-            }
-            return @namespace;
-        }
-
-        private void ParseClass(Cursor cursor)
-        {
-            string className = cursor.Spelling;
-            ModelNodeDefinition parent = _context.GetCurrentParent();
-
-            if (parent.Children.Any(c => c.Name == className))
-            {
-                return;
-            }
-
-            _context.Class = new ClassDefinition(className);
-            parent.AddChild(_context.Class);
-            if (parent is NamespaceDefinition)
-            {
-                _context.Header.AddNode(_context.Class);
-            }
-
-            cursor.VisitChildren(HeaderVisitor);
-
-            _context.Class = parent as ClassDefinition;
-        }
-
-        private void ParseTypedefCursor(Cursor cursor)
-        {
-            var underlying = cursor.TypedefDeclUnderlyingType.Canonical;
-
-            //throw new NotImplementedException();
         }
     }
 }

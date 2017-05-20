@@ -5,9 +5,9 @@ using System.Linq;
 
 namespace DotNetWrapperGen.Parser
 {
-    public class MethodParser
+    public class MethodParser : IParser
     {
-        public static void Parse(Cursor cursor, CppParserContext context)
+        public void Parse(Cursor cursor, CppParserContext context)
         {
             string methodName = cursor.Spelling;
 

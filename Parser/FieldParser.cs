@@ -3,9 +3,9 @@ using DotNetWrapperGen.CodeModel;
 
 namespace DotNetWrapperGen.Parser
 {
-    public class FieldParser
+    public class FieldParser : IParser
     {
-        public static void Parse(Cursor cursor, CppParserContext context)
+        public void Parse(Cursor cursor, CppParserContext context)
         {
             string fieldName = cursor.Spelling;
             var field = new FieldDefinition(fieldName, new TypeRefDefinition(cursor.Type));

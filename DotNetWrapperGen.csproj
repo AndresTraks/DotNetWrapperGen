@@ -54,13 +54,16 @@
   <ItemGroup>
     <Compile Include="CodeStructure\PathUtility.cs" />
     <Compile Include="CodeStructure\StructureNodeReplacer.cs" />
+    <Compile Include="Parser\ClassParser.cs" />
     <Compile Include="Parser\CppParser.cs" />
     <Compile Include="CodeModel\ModelNodeDefinition.cs" />
     <Compile Include="CodeModel\NamespaceDefinition.cs" />
     <Compile Include="Parser\CppParserContext.cs" />
     <Compile Include="Parser\FieldParser.cs" />
     <Compile Include="Parser\HeaderNamespaceTree.cs" />
+    <Compile Include="Parser\IParser.cs" />
     <Compile Include="Parser\MethodParser.cs" />
+    <Compile Include="Parser\NamespaceParser.cs" />
     <Compile Include="Parser\VcppNameDecorator.cs" />
     <Compile Include="CodeStructure\FolderDefinition.cs" />
     <Compile Include="CodeStructure\SourceItemDefinition.cs" />
