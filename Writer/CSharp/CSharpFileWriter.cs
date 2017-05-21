@@ -116,14 +116,14 @@ namespace DotNetWrapperGen.Writer.CSharp
                 INodeWriter writer;
                 if (_writers.TryGetValue(nodeType, out writer))
                 {
-                    foreach (var child in nodesByType[nodeType])
+                    foreach (var child in nodesByType[nodeType].OrderBy(n => n.Name))
                     {
                         writer.Write(child, _writer);
                     }
                 }
                 else
                 {
-                    foreach (var child in nodesByType[nodeType])
+                    foreach (var child in nodesByType[nodeType].OrderBy(n => n.Name))
                     {
                         WriteNode(child);
                     }

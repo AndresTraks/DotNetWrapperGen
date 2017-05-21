@@ -1,5 +1,6 @@
 ﻿using DotNetWrapperGen.CodeModel;
 using System.IO;
+using System.Linq;
 
 namespace DotNetWrapperGen.Writer.CSharp
 {
@@ -12,15 +13,25 @@ namespace DotNetWrapperGen.Writer.CSharp
             writer.WriteLine($"\tpublic enum {@enum.Name}");
             writer.WriteLine("\t{");
 
+            var lastEnumerator = @enum.Enumerators.Last();
             foreach (EnumeratorDefinition enumerator in @enum.Enumerators)
             {
                 if (enumerator.Value != null)
                 {
-                    writer.WriteLine($"\t\t{enumerator.Name} = {enumerator.Value};");
+                    writer.Write($"\t\t{enumerator.Name} = {enumerator.Value}");
                 }
                 else
                 {
-                    writer.WriteLine($"\t\t{enumerator.Name};");
+                    writer.Write($"\t\t{enumerator.Name}");
+                }
+
+                if (enumerator != lastEnumerator)
+                {
+                    writer.WriteLine(",");
+                }
+                else
+                {
+                    writer.WriteLine();
                 }
             }
 
