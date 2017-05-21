@@ -21,7 +21,7 @@ namespace DotNetWrapperGen.Tests.CodeStructure
             var header = new HeaderDefinition("header1.h");
             var @namespace = new NamespaceDefinition();
             var @class = new ClassDefinition("CppClass");
-            var @enum = new EnumDefinition("CppClass");
+            var @enum = new EnumDefinition("CppEnum");
 
             root.AddChild(header);
 

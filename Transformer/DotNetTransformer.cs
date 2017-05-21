@@ -13,6 +13,7 @@ namespace DotNetWrapperGen.Transformer
             RenameCodeFiles(rootFolder);
             MoveGlobalSymbolsToClasses(globalNamespace);
             new OperatorTransformer().Transform(globalNamespace, rootFolder);
+            new EnumTransformer().Transform(globalNamespace, rootFolder);
         }
 
         // In C#, namespaces cannot contain fields or methods, move them into classes.

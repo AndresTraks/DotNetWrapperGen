@@ -83,6 +83,7 @@
     <Compile Include="Project\WrapperProject.cs" />
     <Compile Include="Transformer\BulletTransformer.cs" />
     <Compile Include="Transformer\DotNetTransformer.cs" />
+    <Compile Include="Transformer\EnumTransformer.cs" />
     <Compile Include="Transformer\ITransformer.cs" />
     <Compile Include="Transformer\OperatorTransformer.cs" />
     <Compile Include="Transformer\StructureCloner.cs" />
