@@ -68,11 +68,6 @@ namespace DotNetWrapperGen.CodeModel
             return base.GetHashCode();
         }
 
-        public override string ToString()
-        {
-            return Name;
-        }
-
         public override void AddChild(ModelNodeDefinition child)
         {
             throw new NotSupportedException("Method cannot have children");

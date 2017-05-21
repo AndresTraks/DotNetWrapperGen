@@ -1,7 +1,6 @@
 ﻿using ClangSharp;
 using DotNetWrapperGen.CodeModel;
 using DotNetWrapperGen.CodeStructure;
-using DotNetWrapperGen.Parser;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -41,8 +40,8 @@ namespace DotNetWrapperGen.Parser
 
             _context.DefinitionParsers.Add(CursorKind.ClassDecl, classParser);
             _context.DefinitionParsers.Add(CursorKind.ClassTemplate, classParser);
-            _context.DefinitionParsers.Add(CursorKind.EnumDecl, classParser);
             _context.DefinitionParsers.Add(CursorKind.StructDecl, classParser);
+            _context.DefinitionParsers.Add(CursorKind.EnumDecl, new EnumParser());
             _context.DefinitionParsers.Add(CursorKind.Namespace, new NamespaceParser());
             _context.DeclarationParsers.Add(CursorKind.FieldDecl, new FieldParser());
             _context.DeclarationParsers.Add(CursorKind.CxxMethod, methodParser);

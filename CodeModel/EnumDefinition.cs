@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DotNetWrapperGen.CodeModel
 {
@@ -10,24 +11,54 @@ namespace DotNetWrapperGen.CodeModel
         {
         }
 
-        public List<string> EnumConstants { get; } = new List<string>();
-        public List<string> EnumConstantValues { get; } = new List<string>();
-        public List<EnumeratorDefinition> Enumerators { get; } = new List<EnumeratorDefinition>();
+        public IEnumerable<EnumeratorDefinition> Enumerators => Children.Cast<EnumeratorDefinition>();
 
         public override void AddChild(ModelNodeDefinition child)
         {
-            throw new NotSupportedException("Enum cannot have children");
+            if (!(child is EnumeratorDefinition))
+            {
+                throw new NotSupportedException("Enum can only contain enumerators");
+            }
+
+            base.AddChild(child);
         }
 
         public override object Clone()
         {
-            return new EnumDefinition(Name);
+            var newEnum = new EnumDefinition(Name)
+            {
+                Header = Header
+            };
+
+            foreach (ModelNodeDefinition child in Children)
+            {
+                newEnum.AddChild((ModelNodeDefinition)child.Clone());
+            }
+
+            return newEnum;
         }
     }
 
-    public class EnumeratorDefinition
+    public class EnumeratorDefinition : ModelNodeDefinition
     {
-        public string Name { get; set; }
+        public EnumeratorDefinition(string name, string value)
+            : base(name)
+        {
+            Value = value;
+        }
+
         public string Value { get; set; }
+
+        public override object Clone()
+        {
+            return new EnumeratorDefinition(Name, Value);
+        }
+
+        public override string ToString()
+        {
+            return !string.IsNullOrEmpty(Value)
+                ? $"{Name} = {Value}"
+                : Name;
+        }
     }
 }

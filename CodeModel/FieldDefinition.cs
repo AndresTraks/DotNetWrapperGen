@@ -12,11 +12,6 @@ namespace DotNetWrapperGen.CodeModel
 
         public TypeRefDefinition Type { get; private set; }
 
-        public override string ToString()
-        {
-            return Name;
-        }
-
         public override void AddChild(ModelNodeDefinition child)
         {
             throw new NotSupportedException("Field cannot have children");

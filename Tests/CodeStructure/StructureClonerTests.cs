@@ -21,11 +21,15 @@ namespace DotNetWrapperGen.Tests.CodeStructure
             var header = new HeaderDefinition("header1.h");
             var @namespace = new NamespaceDefinition();
             var @class = new ClassDefinition("CppClass");
+            var @enum = new EnumDefinition("CppClass");
 
             root.AddChild(header);
 
             @namespace.AddChild(@class);
             header.AddNode(@class);
+
+            @namespace.AddChild(@enum);
+            header.AddNode(@enum);
 
             var cloner = new StructureCloner();
             cloner.Clone(@namespace);
@@ -40,14 +44,21 @@ namespace DotNetWrapperGen.Tests.CodeStructure
             var headerClone = (HeaderDefinition)rootClone.Children.First();
             Assert.AreNotSame(header, headerClone);
             Assert.AreSame(rootClone, headerClone.Parent);
-            Assert.AreEqual(1, headerClone.Nodes.Count);
+            Assert.AreEqual(2, headerClone.Nodes.Count);
 
-            var classClone = (ClassDefinition)headerClone.Nodes.First();
+            var classClone = (ClassDefinition)headerClone.Nodes[0];
             Assert.AreNotSame(@class, classClone);
             Assert.AreSame(headerClone, classClone.Header);
             Assert.AreEqual(@class.Name, classClone.Name);
             Assert.AreEqual(@class.Children.Count, classClone.Children.Count);
             Assert.AreSame(rootNamespaceClone, classClone.Parent);
+
+            var enumClone = (EnumDefinition)headerClone.Nodes[1];
+            Assert.AreNotSame(@enum, enumClone);
+            Assert.AreSame(headerClone, enumClone.Header);
+            Assert.AreEqual(@enum.Name, enumClone.Name);
+            Assert.AreEqual(@enum.Children.Count, enumClone.Children.Count);
+            Assert.AreSame(rootNamespaceClone, enumClone.Parent);
 
             Assert.AreNotSame(@namespace, rootNamespaceClone);
             Assert.AreEqual(@namespace.Children.Count, rootNamespaceClone.Children.Count);

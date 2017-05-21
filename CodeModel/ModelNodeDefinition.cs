@@ -67,6 +67,11 @@ namespace DotNetWrapperGen.CodeModel
 
         public abstract object Clone();
 
+        public override string ToString()
+        {
+            return Name;
+        }
+
         private void AssertNoHierarchyCycle(ModelNodeDefinition nodeToAdd)
         {
             var parent = this;

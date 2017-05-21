@@ -26,7 +26,7 @@ namespace DotNetWrapperGen.Parser
         public IDictionary<CursorKind, IParser> DefinitionParsers { get; } = new Dictionary<CursorKind, IParser>();
         public IDictionary<CursorKind, IParser> DeclarationParsers { get; } = new Dictionary<CursorKind, IParser>();
 
-        public ModelNodeDefinition GetCurrentParent()
+        public ModelNodeDefinition GetTopNode()
         {
             return Class != null
                 ? Class as ModelNodeDefinition

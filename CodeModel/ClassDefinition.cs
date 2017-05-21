@@ -64,11 +64,6 @@ namespace DotNetWrapperGen.CodeModel
             }
         }
 
-        public override string ToString()
-        {
-            return Name;
-        }
-
         public override void AddChild(ModelNodeDefinition child)
         {
             if (child is NamespaceDefinition)
