@@ -122,6 +122,8 @@
     <Compile Include="Writer\CSharp\CSharpFileWriter.cs" />
     <Compile Include="Writer\CSharp\CSharpMethodWriter.cs" />
     <Compile Include="Writer\CSharp\CSharpProjectWriter.cs" />
+    <Compile Include="Writer\CSharp\EnumWriter.cs" />
+    <Compile Include="Writer\INodeWriter.cs" />
     <EmbeddedResource Include="View\CppClassesTab.resx">
       <DependentUpon>CppClassesTab.cs</DependentUpon>
     </EmbeddedResource>

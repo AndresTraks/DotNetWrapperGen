@@ -56,7 +56,7 @@ namespace DotNetWrapperGen.CodeModel
 
         public override string ToString()
         {
-            return !string.IsNullOrEmpty(Value)
+            return Value != null
                 ? $"{Name} = {Value}"
                 : Name;
         }

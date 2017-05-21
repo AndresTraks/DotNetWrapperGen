@@ -21,12 +21,13 @@ namespace DotNetWrapperGen.Parser
         public NamespaceDefinition Namespace { get; set; }
         public ClassDefinition Class { get; set; }
         public MethodDefinition Method { get; internal set; }
+
         public Cursor.CursorVisitor NodeVisitor { get; internal set; }
 
         public IDictionary<CursorKind, IParser> DefinitionParsers { get; } = new Dictionary<CursorKind, IParser>();
         public IDictionary<CursorKind, IParser> DeclarationParsers { get; } = new Dictionary<CursorKind, IParser>();
 
-        public ModelNodeDefinition GetTopNode()
+        public ModelNodeDefinition GetTopContainerNode()
         {
             return Class != null
                 ? Class as ModelNodeDefinition

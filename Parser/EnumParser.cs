@@ -8,7 +8,7 @@ namespace DotNetWrapperGen.Parser
     {
         public void Parse(Cursor cursor, CppParserContext context)
         {
-            var parent = context.GetTopNode();
+            var parent = context.GetTopContainerNode();
             var @enum = new EnumDefinition(cursor.Spelling);
 
             foreach (var constantDecl in cursor.Children
@@ -28,10 +28,6 @@ namespace DotNetWrapperGen.Parser
 
         private static string GetEnumeratorValue(Cursor constantDecl, CppParserContext context)
         {
-            if (constantDecl.Children.Count > 1)
-            {
-                "".ToString();
-            }
             var value = constantDecl.Children.FirstOrDefault();
             if (value != null)
             {
@@ -39,9 +35,10 @@ namespace DotNetWrapperGen.Parser
                     .Where(t => t.Kind != TokenKind.Comment &&
                         !t.Spelling.Equals(",") &&
                         !t.Spelling.Equals("}"));
-                return string.Join("", valueTokens.Select(t => t.Spelling));
+                string spelling = string.Join("", valueTokens.Select(t => t.Spelling));
+                return string.IsNullOrEmpty(spelling) ? null : spelling;
             }
-            return "";
+            return null;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using DotNetWrapperGen.CodeModel;
 using DotNetWrapperGen.CodeStructure;
 using DotNetWrapperGen.Parser;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -12,15 +13,20 @@ namespace DotNetWrapperGen.Writer.CSharp
         private StreamWriter _writer;
         private CSharpMethodWriter _methodWriter;
 
+        private IDictionary<string, INodeWriter> _writers = new Dictionary<string, INodeWriter>();
+
         private string[] _nodeTypeOrder = new[] {
             "constructor",
             "method",
-            "class"
+            "class",
+            "enum"
         };
 
         public CSharpFileWriter(HeaderDefinition header)
         {
             _header = header;
+
+            _writers["enum"] = new EnumWriter();
         }
 
         public void Write()
@@ -105,11 +111,22 @@ namespace DotNetWrapperGen.Writer.CSharp
         {
             var nodesByType = node.Children.ToLookup(GetNodeType);
 
-            foreach (var children in _nodeTypeOrder.Select(type => nodesByType[type]))
+            foreach (var nodeType in _nodeTypeOrder)
             {
-                foreach (var child in children)
+                INodeWriter writer;
+                if (_writers.TryGetValue(nodeType, out writer))
                 {
-                    WriteNode(child);
+                    foreach (var child in nodesByType[nodeType])
+                    {
+                        writer.Write(child, _writer);
+                    }
+                }
+                else
+                {
+                    foreach (var child in nodesByType[nodeType])
+                    {
+                        WriteNode(child);
+                    }
                 }
             }
         }
@@ -119,6 +136,10 @@ namespace DotNetWrapperGen.Writer.CSharp
             if (node is ClassDefinition)
             {
                 return "class";
+            }
+            if (node is EnumDefinition)
+            {
+                return "enum";
             }
             var method = node as MethodDefinition;
             if (method != null)

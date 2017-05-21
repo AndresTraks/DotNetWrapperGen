@@ -35,7 +35,7 @@ namespace DotNetWrapperGen.Parser
                 }
             }
 
-            ModelNodeDefinition parent = context.GetTopNode();
+            ModelNodeDefinition parent = context.GetTopContainerNode();
             if (parent is NamespaceDefinition)
             {
                 if (cursor.SemanticParent.Kind == CursorKind.ClassDecl ||
