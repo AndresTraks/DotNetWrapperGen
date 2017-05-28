@@ -1,6 +1,10 @@
 ﻿using DotNetWrapperGen.CodeModel;
 using DotNetWrapperGen.CodeStructure;
+using DotNetWrapperGen.Utility;
 using System.Linq;
+
+// Designing Flags Enumerations
+// https://msdn.microsoft.com/en-us/library/ms229062(v=vs.100).aspx
 
 namespace DotNetWrapperGen.Transformer
 {
@@ -33,6 +37,8 @@ namespace DotNetWrapperGen.Transformer
             string[] newNames = CombineNameParts(names);
             ReplaceNameReferencesInValues(enumerators, newNames);
             ReplaceNames(enumerators, newNames);
+
+            EnsureNoneValue(@enum);
         }
 
         private static string[][] GetNamesWithParts(EnumeratorDefinition[] enumerators)
@@ -126,6 +132,28 @@ namespace DotNetWrapperGen.Transformer
             {
                 enumerators[i].Name = newNames[i];
             }
+        }
+
+        private static void EnsureNoneValue(EnumDefinition @enum)
+        {
+            if (@enum.IsFlags() && HasZeroValue(@enum))
+            {
+                var enumerator = new EnumeratorDefinition("None", "0");
+                @enum.AddChild(enumerator);
+                @enum.Children.Remove(enumerator);
+                @enum.Children.Insert(0, enumerator);
+            }
+        }
+
+        private static bool HasZeroValue(EnumDefinition @enum)
+        {
+            return !@enum.Enumerators.Any(enumerator =>
+            {
+                int value;
+                return enumerator.ParseValue(out value)
+                    ? value == 0
+                    : false;
+            });
         }
     }
 }

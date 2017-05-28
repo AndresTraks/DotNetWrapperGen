@@ -59,6 +59,7 @@
     <Compile Include="CodeModel\ModelNodeDefinition.cs" />
     <Compile Include="CodeModel\NamespaceDefinition.cs" />
     <Compile Include="Parser\CppParserContext.cs" />
+    <Compile Include="Utility\EnumExtensions.cs" />
     <Compile Include="Parser\EnumParser.cs" />
     <Compile Include="Parser\FieldParser.cs" />
     <Compile Include="Parser\HeaderNamespaceTree.cs" />
@@ -105,6 +106,7 @@
     <Compile Include="View\CSharpClassesTab.Designer.cs">
       <DependentUpon>CSharpClassesTab.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\NodeTitleProvider.cs" />
     <Compile Include="View\ProjectView.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -60,7 +60,8 @@ namespace DotNetWrapperGen.View
             }
             else
             {
-                parentTreeNode = parentTreeNode.Nodes.Add(modelNode.Name);
+                string title = NodeTitleProvider.Get(modelNode);
+                parentTreeNode = parentTreeNode.Nodes.Add(title);
             }
             SetNodeProperties(modelNode, parentTreeNode);
 

@@ -1,4 +1,5 @@
 ﻿using DotNetWrapperGen.CodeModel;
+using DotNetWrapperGen.Utility;
 using System.IO;
 using System.Linq;
 
@@ -9,6 +10,11 @@ namespace DotNetWrapperGen.Writer.CSharp
         public void Write(ModelNodeDefinition node, StreamWriter writer)
         {
             var @enum = (EnumDefinition)node;
+
+            if (@enum.IsFlags())
+            {
+                writer.WriteLine($"\t[Flags]");
+            }
 
             writer.WriteLine($"\tpublic enum {@enum.Name}");
             writer.WriteLine("\t{");
