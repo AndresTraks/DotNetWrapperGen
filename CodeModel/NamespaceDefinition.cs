@@ -62,7 +62,10 @@ namespace DotNetWrapperGen.CodeModel
 
         public override object Clone()
         {
-            var node = new NamespaceDefinition(Name);
+            var node = new NamespaceDefinition(Name)
+            {
+                Source = this
+            };
             foreach (ModelNodeDefinition childClone in Children.Select(c => c.Clone()))
             {
                 node.AddChild(childClone);

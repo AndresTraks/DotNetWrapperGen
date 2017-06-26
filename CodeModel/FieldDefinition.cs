@@ -19,7 +19,10 @@ namespace DotNetWrapperGen.CodeModel
 
         public override object Clone()
         {
-            return new FieldDefinition(Name, new TypeRefDefinition());
+            return new FieldDefinition(Name, new TypeRefDefinition())
+            {
+                Source = this
+            };
         }
     }
 }

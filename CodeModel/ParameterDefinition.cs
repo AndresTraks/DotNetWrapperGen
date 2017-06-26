@@ -13,6 +13,8 @@
         public TypeRefDefinition Type { get; private set; }
         public bool IsOptional { get; set; }
 
+        public ParameterDefinition Source { get; set; }
+
         public override string ToString()
         {
             return Type.ToString() + ' ' + Name;
@@ -20,7 +22,10 @@
 
         public ParameterDefinition Clone()
         {
-            return new ParameterDefinition(Name, Type?.Clone() as TypeRefDefinition, IsOptional);
+            return new ParameterDefinition(Name, Type?.Clone() as TypeRefDefinition, IsOptional)
+            {
+                Source = this
+            };
         }
     }
 }

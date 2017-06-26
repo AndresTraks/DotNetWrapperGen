@@ -59,6 +59,8 @@
     <Compile Include="CodeModel\ModelNodeDefinition.cs" />
     <Compile Include="CodeModel\NamespaceDefinition.cs" />
     <Compile Include="Parser\CppParserContext.cs" />
+    <Compile Include="Transformer\NativeMethodImporter.cs" />
+    <Compile Include="Transformer\NodeOrderer.cs" />
     <Compile Include="Utility\EnumExtensions.cs" />
     <Compile Include="Parser\EnumParser.cs" />
     <Compile Include="Parser\FieldParser.cs" />

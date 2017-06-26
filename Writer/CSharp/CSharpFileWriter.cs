@@ -4,6 +4,7 @@ using DotNetWrapperGen.Parser;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System;
 
 namespace DotNetWrapperGen.Writer.CSharp
 {
@@ -116,14 +117,14 @@ namespace DotNetWrapperGen.Writer.CSharp
                 INodeWriter writer;
                 if (_writers.TryGetValue(nodeType, out writer))
                 {
-                    foreach (var child in nodesByType[nodeType].OrderBy(n => n.Name))
+                    foreach (var child in nodesByType[nodeType])
                     {
                         writer.Write(child, _writer);
                     }
                 }
                 else
                 {
-                    foreach (var child in nodesByType[nodeType].OrderBy(n => n.Name))
+                    foreach (var child in nodesByType[nodeType])
                     {
                         WriteNode(child);
                     }

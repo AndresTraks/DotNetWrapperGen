@@ -30,6 +30,12 @@ namespace DotNetWrapperGen.Transformer
 
         private static void RenameClasses(ModelNodeDefinition node)
         {
+            var @class = node as ClassDefinition;
+            if (@class != null && @class.Name == "UnsafeNativeMethods")
+            {
+                return;
+            }
+
             if (node.Name.StartsWith("bt"))
             {
                 node.Name = node.Name.Substring(2);

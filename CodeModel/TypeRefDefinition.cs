@@ -56,6 +56,28 @@ namespace DotNetWrapperGen.CodeModel
             }
         }
 
+        public TypeRefDefinition(string name)
+            : base(name)
+        {
+        }
+
+        public TypeRefDefinition()
+            : base("void")
+        {
+            IsBasic = true;
+        }
+
+        public static TypeRefDefinition IntPtr
+        {
+            get
+            {
+                return new TypeRefDefinition()
+                {
+                    IsPointer = true
+                };
+            }
+        }
+
         public bool IsBasic { get; set; }
         public bool IsPointer { get; set; }
         public bool IsReference { get; set; }
@@ -117,7 +139,7 @@ namespace DotNetWrapperGen.CodeModel
                 }
                 if (Target == null)
                 {
-                    Console.WriteLine("Unresolved reference to " + Name);
+                    // TODO: Console.WriteLine("Unresolved reference to " + Name);
                     return Name;
                 }
                 if (SpecializedTemplateType != null)
@@ -127,6 +149,7 @@ namespace DotNetWrapperGen.CodeModel
                 return Target.ManagedName;
             }
         }
+
         public string ManagedTypeRefName
         {
             get
@@ -198,17 +221,6 @@ namespace DotNetWrapperGen.CodeModel
             }
         }
 
-        public TypeRefDefinition(string name)
-            : base(name)
-        {
-        }
-
-        public TypeRefDefinition()
-            : base("void")
-        {
-            IsBasic = true;
-        }
-
         public override bool Equals(object obj)
         {
             TypeRefDefinition t = obj as TypeRefDefinition;
@@ -250,7 +262,21 @@ namespace DotNetWrapperGen.CodeModel
 
         public override object Clone()
         {
-            return new TypeRefDefinition(Name);
+            return new TypeRefDefinition(Name)
+            {
+                HasTemplateTypeParameter = HasTemplateTypeParameter,
+                IsBasic = IsBasic,
+                Header = Header,
+                IsConst = IsConst,
+                IsConstantArray = IsConstantArray,
+                IsExcluded = IsExcluded,
+                IsPointer = IsPointer,
+                IsReference = IsReference,
+                Parent = Parent,
+                Referenced = Referenced != null ? (TypeRefDefinition)Referenced.Clone() : null,
+                SpecializedTemplateType = SpecializedTemplateType != null ? (TypeRefDefinition)SpecializedTemplateType.Clone() : null,
+                Target = Target
+            };
         }
     }
 }

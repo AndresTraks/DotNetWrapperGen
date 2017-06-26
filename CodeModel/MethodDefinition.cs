@@ -20,13 +20,7 @@ namespace DotNetWrapperGen.CodeModel
         public FieldDefinition Field { get; set; } // get/set method target
         public PropertyDefinition Property { get; set; } // property that wraps this get/set method
 
-        public string ManagedName
-        {
-            get
-            {
-                return Name.Substring(0, 1).ToUpper() + Name.Substring(1);
-            }
-        }
+        public bool IsExtern { get; set; }
 
         public override bool Equals(object obj)
         {
@@ -77,7 +71,8 @@ namespace DotNetWrapperGen.CodeModel
         {
             return new MethodDefinition(Name, Parameters.Select(p => p.Clone()).ToArray())
             {
-                IsConstructor = IsConstructor
+                IsConstructor = IsConstructor,
+                Source = this
             };
         }
     }
