@@ -134,7 +134,7 @@ namespace DotNetWrapperGen.Project
                 }
                 catch (Exception ex)
                 {
-                    //WrapperEvent.Invoke(this, new WrapperProjectEventArgs(WrapperProjectEvent.LogMessage, ex.ToString()));
+                    WrapperEvent.Invoke(this, new WrapperProjectEventArgs(WrapperProjectEvent.LogMessage, ex.ToString()));
                 }
                 SetStatus(WrapperStatus.WritingWrapperDone);
             });

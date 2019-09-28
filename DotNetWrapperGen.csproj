@@ -59,6 +59,17 @@
     <Compile Include="CodeModel\ModelNodeDefinition.cs" />
     <Compile Include="CodeModel\NamespaceDefinition.cs" />
     <Compile Include="Parser\CppParserContext.cs" />
+    <Compile Include="Tokenizer\BlockToken.cs" />
+    <Compile Include="Tokenizer\CSharp\CSharpEnumTokenizer.cs" />
+    <Compile Include="Tokenizer\CSharp\CSharpFileTokenizer.cs" />
+    <Compile Include="Tokenizer\CSharp\CSharpMethodTokenizer.cs" />
+    <Compile Include="Tokenizer\INodeTokenizer.cs" />
+    <Compile Include="Tokenizer\IToken.cs" />
+    <Compile Include="Tokenizer\LinesToken.cs" />
+    <Compile Include="Tokenizer\LineToken.cs" />
+    <Compile Include="Tokenizer\NullToken.cs" />
+    <Compile Include="Tokenizer\StringToken.cs" />
+    <Compile Include="Tokenizer\TokenizerContext.cs" />
     <Compile Include="Transformer\NativeMethodImporter.cs" />
     <Compile Include="Transformer\NodeOrderer.cs" />
     <Compile Include="Utility\ClassExtensions.cs" />
@@ -125,11 +136,8 @@
       <DependentUpon>StartWizard.cs</DependentUpon>
     </Compile>
     <Compile Include="View\SourceItemPropertyPage.cs" />
-    <Compile Include="Writer\CSharp\CSharpFileWriter.cs" />
-    <Compile Include="Writer\CSharp\CSharpMethodWriter.cs" />
     <Compile Include="Writer\CSharp\CSharpProjectWriter.cs" />
-    <Compile Include="Writer\CSharp\EnumWriter.cs" />
-    <Compile Include="Writer\INodeWriter.cs" />
+    <Compile Include="Writer\TokenWriter.cs" />
     <EmbeddedResource Include="View\CppClassesTab.resx">
       <DependentUpon>CppClassesTab.cs</DependentUpon>
     </EmbeddedResource>

@@ -1,12 +1,14 @@
 ﻿using DotNetWrapperGen.CodeStructure;
 using DotNetWrapperGen.Project;
+using DotNetWrapperGen.Tokenizer;
+using DotNetWrapperGen.Tokenizer.CSharp;
 using System.IO;
 
 namespace DotNetWrapperGen.Writer.CSharp
 {
     public class CSharpProjectWriter
     {
-        private WrapperProject _project;
+        private readonly WrapperProject _project;
 
         public CSharpProjectWriter(WrapperProject project)
         {
@@ -20,20 +22,17 @@ namespace DotNetWrapperGen.Writer.CSharp
 
         private void WriteItem(SourceItemDefinition item)
         {
-            var folder = item as FolderDefinition;
-            if (folder != null)
+            if (item is FolderDefinition folder)
             {
                 Directory.CreateDirectory(folder.FullPath);
             }
 
-            var rootFolder = item as RootFolderDefinition;
-            if (rootFolder != null)
+            if (item is RootFolderDefinition rootFolder)
             {
                 Directory.CreateDirectory(rootFolder.FullPath);
             }
 
-            var header = item as HeaderDefinition;
-            if (header != null)
+            if (item is HeaderDefinition header)
             {
                 WriteHeader(header);
             }
@@ -51,8 +50,11 @@ namespace DotNetWrapperGen.Writer.CSharp
                 return;
             }
 
-            var fileWriter = new CSharpFileWriter(header);
-            fileWriter.Write();
+            var fileWriter = new CSharpFileTokenizer(header);
+            TokenizerContext context = fileWriter.Tokenize();
+
+            var tokenWriter = new TokenWriter();
+            tokenWriter.Write(header.FullPath, context);
         }
     }
 }

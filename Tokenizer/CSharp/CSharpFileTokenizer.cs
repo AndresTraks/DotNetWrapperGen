@@ -1,20 +1,18 @@
 ﻿using DotNetWrapperGen.CodeModel;
 using DotNetWrapperGen.CodeStructure;
 using DotNetWrapperGen.Parser;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace DotNetWrapperGen.Writer.CSharp
+namespace DotNetWrapperGen.Tokenizer.CSharp
 {
-    public class CSharpFileWriter
+    public class CSharpFileTokenizer
     {
         private readonly HeaderDefinition _header;
-        private StreamWriter _writer;
-        private CSharpMethodWriter _methodWriter;
+        private TokenizerContext _context;
 
-        private IDictionary<string, INodeWriter> _writers = new Dictionary<string, INodeWriter>();
+        private IDictionary<string, INodeTokenizer> _tokenizers = new Dictionary<string, INodeTokenizer>();
 
         private string[] _nodeTypeOrder = new[] {
             "constructor",
@@ -23,29 +21,27 @@ namespace DotNetWrapperGen.Writer.CSharp
             "enum"
         };
 
-        public CSharpFileWriter(HeaderDefinition header)
+        public CSharpFileTokenizer(HeaderDefinition header)
         {
             _header = header;
 
-            _writers["enum"] = new EnumWriter();
+            _tokenizers["enum"] = new CSharpEnumTokenizer();
+            _tokenizers["constructor"] = new CSharpMethodTokenizer();
+            _tokenizers["method"] = new CSharpMethodTokenizer();
         }
 
-        public void Write()
+        public TokenizerContext Tokenize()
         {
+            _context = new TokenizerContext();
+
             NamespaceTreeNode namespaceTree = HeaderNamespaceTree.GetTree(_header);
+            IToken namespaceToken = TokenizeNamespace(namespaceTree);
+            _context.Add(namespaceToken);
 
-            using (var stream = File.Create(_header.FullPath))
-            {
-                using (_writer = new StreamWriter(stream))
-                {
-                    _methodWriter = new CSharpMethodWriter(_writer);
-
-                    WriteNamespace(namespaceTree);
-                }
-            }
+            return _context;
         }
 
-        private void WriteNamespace(NamespaceTreeNode node)
+        private BlockToken TokenizeNamespace(NamespaceTreeNode node)
         {
             string name;
 
@@ -67,69 +63,76 @@ namespace DotNetWrapperGen.Writer.CSharp
                 name = node.Namespace.Name;
             }
 
-            var @namespace = node.Namespace;
+            LineToken header = new LineToken($"namespace {name}");
 
-            _writer.WriteLine($"namespace {name}");
-            _writer.WriteLine("{");
-
+            var children = new List<IToken>();
             foreach (ModelNodeDefinition childNode in node.Nodes)
             {
-                WriteNode(childNode);
+                IToken childToken = GetNode(childNode);
+                children.Add(childToken);
             }
-
-            _writer.WriteLine("}");
 
             foreach (var childNamespace in node.Children)
             {
-                WriteNamespace(childNamespace);
+                IToken childNamespaceToken = TokenizeNamespace(childNamespace);
+                children.Add(childNamespaceToken);
             }
+
+            BlockToken @namespace = new BlockToken(header, children);
+            return @namespace;
         }
 
-        private void WriteNode(ModelNodeDefinition node)
+        private IToken GetNode(ModelNodeDefinition node)
         {
-            var @class = node as ClassDefinition;
-            if (@class != null)
+            if (node is ClassDefinition @class)
             {
                 var abstractSpecifier = @class.IsAbstract ? "abstract " : null;
                 var baseClassSpecifier = @class.BaseClass != null ? @class.BaseClass.ManagedName : null;
 
-                _writer.WriteLine($"\tpublic {abstractSpecifier}class {node.Name}");
-                _writer.WriteLine("\t{");
-
-                WriteChildren(@class);
-
-                _writer.WriteLine("\t}");
+                var header = new LineToken($"public {abstractSpecifier}class {node.Name}");
+                IList<IToken> children = GetClassMembers(@class);
+                return new BlockToken(header, children);
             }
-
-            var method = node as MethodDefinition;
-            if (method != null)
+            else
             {
-                _methodWriter.Write(method);
+                string nodeType = GetNodeType(node);
+                if (_tokenizers.TryGetValue(nodeType, out INodeTokenizer tokenizer))
+                {
+                    IToken token = tokenizer.Tokenize(node);
+                    return token;
+                }
+                else
+                {
+                    throw new NotImplementedException();
+                }
             }
         }
 
-        private void WriteChildren(ModelNodeDefinition node)
+        private IList<IToken> GetClassMembers(ModelNodeDefinition node)
         {
+            var members = new List<IToken>();
             var nodesByType = node.Children.ToLookup(GetNodeType);
 
             foreach (var nodeType in _nodeTypeOrder)
             {
-                INodeWriter writer;
-                if (_writers.TryGetValue(nodeType, out writer))
+                if (_tokenizers.TryGetValue(nodeType, out INodeTokenizer tokenizer))
                 {
                     foreach (var child in nodesByType[nodeType])
                     {
-                        writer.Write(child, _writer);
+                        IToken childToken = tokenizer.Tokenize(child);
+                        members.Add(childToken);
                     }
                 }
                 else
                 {
                     foreach (var child in nodesByType[nodeType])
                     {
-                        WriteNode(child);
+                        IToken childToken = GetNode(child);
+                        members.Add(childToken);
                     }
                 }
             }
+            return members;
         }
 
         private string GetNodeType(ModelNodeDefinition node)
@@ -142,8 +145,7 @@ namespace DotNetWrapperGen.Writer.CSharp
             {
                 return "enum";
             }
-            var method = node as MethodDefinition;
-            if (method != null)
+            if (node is MethodDefinition method)
             {
                 if (method.IsConstructor)
                 {
