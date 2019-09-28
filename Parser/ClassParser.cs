@@ -9,7 +9,7 @@ namespace DotNetWrapperGen.Parser
         public void Parse(Cursor cursor, CppParserContext context)
         {
             string className = cursor.Spelling;
-            ModelNodeDefinition parent = context.GetTopContainerNode();
+            ModelNodeDefinition parent = context.GetContainingClassOrNamespace();
 
             if (HasNameConflict(className, parent))
             {

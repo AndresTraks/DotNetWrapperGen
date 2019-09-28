@@ -10,7 +10,7 @@ namespace DotNetWrapperGen.Parser
             string fieldName = cursor.Spelling;
             var field = new FieldDefinition(fieldName, new TypeRefDefinition(cursor.Type));
 
-            ModelNodeDefinition parent = context.GetTopContainerNode();
+            ModelNodeDefinition parent = context.GetContainingClassOrNamespace();
             if (parent is NamespaceDefinition)
             {
                 field.Header = context.Header;

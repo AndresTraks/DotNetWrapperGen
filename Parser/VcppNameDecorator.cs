@@ -11,7 +11,7 @@ namespace DotNetWrapperGen.Parser
             if (method == null)
             {
                 throw new ArgumentNullException(nameof(method));
-           } 
+            } 
             return method.Name;
         }
     }

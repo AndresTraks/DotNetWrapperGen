@@ -7,8 +7,8 @@ namespace DotNetWrapperGen.CodeStructure
     {
         public static string MakeRelativePath(string fromPath, string toPath)
         {
-            if (string.IsNullOrEmpty(fromPath)) throw new ArgumentNullException("fromPath");
-            if (string.IsNullOrEmpty(toPath)) throw new ArgumentNullException("toPath");
+            if (string.IsNullOrEmpty(fromPath)) throw new ArgumentNullException(nameof(fromPath));
+            if (string.IsNullOrEmpty(toPath)) throw new ArgumentNullException(nameof(toPath));
 
             var fromUri = new Uri(fromPath);
             var toUri = new Uri(toPath);

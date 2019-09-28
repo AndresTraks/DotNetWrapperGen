@@ -8,7 +8,7 @@ namespace DotNetWrapperGen.Parser
     {
         public void Parse(Cursor cursor, CppParserContext context)
         {
-            var parent = context.GetTopContainerNode();
+            var parent = context.GetContainingClassOrNamespace();
             var @enum = new EnumDefinition(cursor.Spelling);
 
             foreach (var constantDecl in cursor.Children
@@ -32,13 +32,18 @@ namespace DotNetWrapperGen.Parser
             if (value != null)
             {
                 var valueTokens = context.TranslationUnit.Tokenize(value.Extent)
-                    .Where(t => t.Kind != TokenKind.Comment &&
-                        !t.Spelling.Equals(",") &&
-                        !t.Spelling.Equals("}"));
+                    .Where(IsValueToken);
                 string spelling = string.Join("", valueTokens.Select(t => t.Spelling));
                 return string.IsNullOrEmpty(spelling) ? null : spelling;
             }
             return null;
+        }
+
+        private static bool IsValueToken(Token token)
+        {
+            return token.Kind != TokenKind.Comment &&
+                !token.Spelling.Equals(",") &&
+                !token.Spelling.Equals("}");
         }
     }
 }

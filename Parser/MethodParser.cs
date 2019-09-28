@@ -21,21 +21,11 @@ namespace DotNetWrapperGen.Parser
             context.Method = new MethodDefinition(methodName, parameters)
             {
                 IsConstructor = cursor.Kind == CursorKind.Constructor,
-                IsStatic = cursor.IsStaticCxxMethod
+                IsStatic = cursor.IsStaticCxxMethod,
+                IsAbstract = IsCursorAbstract(cursor, context)
             };
 
-            IList<Token> tokens = context.TranslationUnit.Tokenize(cursor.Extent).ToList();
-            if (tokens.Count > 3)
-            {
-                if (tokens[tokens.Count - 3].Spelling.Equals("=") &&
-                    tokens[tokens.Count - 2].Spelling.Equals("0") &&
-                    tokens[tokens.Count - 1].Spelling.Equals(";"))
-                {
-                    context.Method.IsAbstract = true;
-                }
-            }
-
-            ModelNodeDefinition parent = context.GetTopContainerNode();
+            ModelNodeDefinition parent = context.GetContainingClassOrNamespace();
             if (parent is NamespaceDefinition)
             {
                 if (cursor.SemanticParent.Kind == CursorKind.ClassDecl ||
@@ -60,6 +50,22 @@ namespace DotNetWrapperGen.Parser
             bool isOptional = tokens.Any(t => t.Spelling == "=");
 
             return new ParameterDefinition(parameterName, new TypeRefDefinition(cursor.Type), isOptional);
+        }
+
+        private static bool IsCursorAbstract(Cursor cursor, CppParserContext context)
+        {
+            IList<Token> tokens = context.TranslationUnit.Tokenize(cursor.Extent).ToList();
+            int count = tokens.Count;
+            if (count > 3)
+            {
+                if (tokens[count - 3].Spelling.Equals("=") &&
+                    tokens[count - 2].Spelling.Equals("0") &&
+                    tokens[count - 1].Spelling.Equals(";"))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }
