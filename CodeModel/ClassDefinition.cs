@@ -28,24 +28,6 @@ namespace DotNetWrapperGen.CodeModel
 
         public string ManagedName { get; set; }
 
-        public string FullName
-        {
-            get
-            {
-                var parentClass = Parent as ClassDefinition;
-                if (parentClass != null)
-                {
-                    return $"{parentClass.FullName}::{Name}";
-                }
-                var parentNamespace = Parent as NamespaceDefinition;
-                if (parentNamespace != null)
-                {
-                    return $"{parentNamespace.FullName}::{Name}";
-                }
-                return Name;
-            }
-        }
-
         public string FullNameCSharp
         {
             get

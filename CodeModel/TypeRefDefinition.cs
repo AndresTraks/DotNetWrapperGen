@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DotNetWrapperGen.Utility;
+using System;
 
 namespace DotNetWrapperGen.CodeModel
 {
@@ -27,11 +28,19 @@ namespace DotNetWrapperGen.CodeModel
                 case ClangSharp.Type.Kind.ULongLong:
                 case ClangSharp.Type.Kind.UShort:
                 case ClangSharp.Type.Kind.Enum:
+                case ClangSharp.Type.Kind.LongDouble:
                     IsBasic = true;
                     break;
                 case ClangSharp.Type.Kind.Typedef:
-                    Referenced = new TypeRefDefinition(type.Canonical);
-                    IsBasic = Referenced.IsBasic;
+                    if (type.Canonical.TypeKind == ClangSharp.Type.Kind.MemberPointer)
+                    {
+                        IsBasic = false;
+                    }
+                    else
+                    {
+                        Referenced = new TypeRefDefinition(type.Canonical);
+                        IsBasic = Referenced.IsBasic;
+                    }
                     break;
                 case ClangSharp.Type.Kind.Pointer:
                     Referenced = new TypeRefDefinition(type.Pointee);
@@ -95,7 +104,7 @@ namespace DotNetWrapperGen.CodeModel
             {
                 if (Target != null)
                 {
-                    return Target.FullName;
+                    return Target.GetFullName();
                 }
                 return Name;
             }
@@ -194,6 +203,8 @@ namespace DotNetWrapperGen.CodeModel
                     return "unsigned long long";
                 case ClangSharp.Type.Kind.UShort:
                     return "unsigned short";
+                case ClangSharp.Type.Kind.LongDouble:
+                    return "double";
                 case ClangSharp.Type.Kind.Typedef:
                     return type.Declaration.Spelling;
                 case ClangSharp.Type.Kind.Enum:
