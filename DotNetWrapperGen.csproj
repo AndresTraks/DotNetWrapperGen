@@ -60,6 +60,7 @@
     <Compile Include="CodeModel\NamespaceDefinition.cs" />
     <Compile Include="Parser\CppParserContext.cs" />
     <Compile Include="Tokenizer\BlockToken.cs" />
+    <Compile Include="Tokenizer\CSharp\CSharpClassTokenizer.cs" />
     <Compile Include="Tokenizer\CSharp\CSharpEnumTokenizer.cs" />
     <Compile Include="Tokenizer\CSharp\CSharpFileTokenizer.cs" />
     <Compile Include="Tokenizer\CSharp\CSharpMethodTokenizer.cs" />

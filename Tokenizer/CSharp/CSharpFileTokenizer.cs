@@ -3,38 +3,26 @@ using DotNetWrapperGen.CodeStructure;
 using DotNetWrapperGen.Parser;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace DotNetWrapperGen.Tokenizer.CSharp
 {
     public class CSharpFileTokenizer
     {
-        private readonly HeaderDefinition _header;
         private TokenizerContext _context;
+        private readonly CSharpClassTokenizer _classTokenizer;
+        private readonly CSharpEnumTokenizer _enumTokenizer;
 
-        private IDictionary<string, INodeTokenizer> _tokenizers = new Dictionary<string, INodeTokenizer>();
-
-        private string[] _nodeTypeOrder = new[] {
-            "constructor",
-            "method",
-            "class",
-            "enum"
-        };
-
-        public CSharpFileTokenizer(HeaderDefinition header)
+        public CSharpFileTokenizer()
         {
-            _header = header;
-
-            _tokenizers["enum"] = new CSharpEnumTokenizer();
-            _tokenizers["constructor"] = new CSharpMethodTokenizer();
-            _tokenizers["method"] = new CSharpMethodTokenizer();
+            _enumTokenizer = new CSharpEnumTokenizer();
+            _classTokenizer = new CSharpClassTokenizer(_enumTokenizer);
         }
 
-        public TokenizerContext Tokenize()
+        public TokenizerContext Tokenize(HeaderDefinition header)
         {
             _context = new TokenizerContext();
 
-            NamespaceTreeNode namespaceTree = HeaderNamespaceTree.GetTree(_header);
+            NamespaceTreeNode namespaceTree = HeaderNamespaceTree.GetTree(header);
             IToken namespaceToken = TokenizeNamespace(namespaceTree);
             _context.Add(namespaceToken);
 
@@ -68,7 +56,7 @@ namespace DotNetWrapperGen.Tokenizer.CSharp
             var children = new List<IToken>();
             foreach (ModelNodeDefinition childNode in node.Nodes)
             {
-                IToken childToken = GetNode(childNode);
+                IToken childToken = TokenizeNode(childNode);
                 children.Add(childToken);
             }
 
@@ -82,82 +70,19 @@ namespace DotNetWrapperGen.Tokenizer.CSharp
             return @namespace;
         }
 
-        private IToken GetNode(ModelNodeDefinition node)
+        private IToken TokenizeNode(ModelNodeDefinition node)
         {
             if (node is ClassDefinition @class)
             {
-                var abstractSpecifier = @class.IsAbstract ? "abstract " : null;
-                var baseClassSpecifier = @class.BaseClass != null ? @class.BaseClass.ManagedName : null;
+                return _classTokenizer.Tokenize(@class);
+            }
 
-                var header = new LineToken($"public {abstractSpecifier}class {node.Name}");
-                IList<IToken> children = GetClassMembers(@class);
-                return new BlockToken(header, children);
-            }
-            else
+            if (node is EnumDefinition @enum)
             {
-                string nodeType = GetNodeType(node);
-                if (_tokenizers.TryGetValue(nodeType, out INodeTokenizer tokenizer))
-                {
-                    IToken token = tokenizer.Tokenize(node);
-                    return token;
-                }
-                else
-                {
-                    throw new NotImplementedException();
-                }
+                return _enumTokenizer.Tokenize(@enum);
             }
-        }
 
-        private IList<IToken> GetClassMembers(ModelNodeDefinition node)
-        {
-            var members = new List<IToken>();
-            var nodesByType = node.Children.ToLookup(GetNodeType);
-
-            foreach (var nodeType in _nodeTypeOrder)
-            {
-                if (_tokenizers.TryGetValue(nodeType, out INodeTokenizer tokenizer))
-                {
-                    foreach (var child in nodesByType[nodeType])
-                    {
-                        IToken childToken = tokenizer.Tokenize(child);
-                        members.Add(childToken);
-                    }
-                }
-                else
-                {
-                    foreach (var child in nodesByType[nodeType])
-                    {
-                        IToken childToken = GetNode(child);
-                        members.Add(childToken);
-                    }
-                }
-            }
-            return members;
-        }
-
-        private string GetNodeType(ModelNodeDefinition node)
-        {
-            if (node is ClassDefinition)
-            {
-                return "class";
-            }
-            if (node is EnumDefinition)
-            {
-                return "enum";
-            }
-            if (node is MethodDefinition method)
-            {
-                if (method.IsConstructor)
-                {
-                    return "constructor";
-                }
-                return "method";
-            }
-            if (node is FieldDefinition)
-            {
-                return "field";
-            }
-            return "node";
+            throw new NotImplementedException();
         }
     }
 }

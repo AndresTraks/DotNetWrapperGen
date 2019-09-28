@@ -50,8 +50,8 @@ namespace DotNetWrapperGen.Writer.CSharp
                 return;
             }
 
-            var fileWriter = new CSharpFileTokenizer(header);
-            TokenizerContext context = fileWriter.Tokenize();
+            var fileWriter = new CSharpFileTokenizer();
+            TokenizerContext context = fileWriter.Tokenize(header);
 
             var tokenWriter = new TokenWriter();
             tokenWriter.Write(header.FullPath, context);

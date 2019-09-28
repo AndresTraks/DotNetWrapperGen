@@ -39,8 +39,7 @@ namespace DotNetWrapperGen.Utility
 
         private static bool IsFlag(EnumeratorDefinition enumerator)
         {
-            int intValue;
-            if (ParseValue(enumerator, out intValue))
+            if (ParseValue(enumerator, out int intValue))
             {
                 return intValue == 0 || IsPowerOfTwo(intValue);
             }

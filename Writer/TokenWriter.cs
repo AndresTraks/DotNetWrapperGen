@@ -48,7 +48,7 @@ namespace DotNetWrapperGen.Writer
             }
             else if (token is LineToken line)
             {
-                WriteLineToken(line);
+                WriteLine(line);
             }
             else if (token is BlockToken block)
             {
@@ -56,31 +56,38 @@ namespace DotNetWrapperGen.Writer
                 {
                     _writer.WriteLine();
                 }
-
-                WriteToken(block.Header);
-                WriteIndent();
-                _writer.WriteLine('{');
-                _indent++;
-                IToken precedingChildToken = null;
-                foreach (IToken child in block.Children)
-                {
-                    WriteToken(child, precedingChildToken);
-                    precedingChildToken = child;
-                }
-                _indent--;
-                WriteIndent();
-                _writer.WriteLine('}');
+                WriteBlock(block);
             }
             else if (token is LinesToken lines)
             {
                 foreach (LineToken lineToken in lines.Lines)
                 {
-                    WriteLineToken(lineToken);
+                    WriteLine(lineToken);
                 }
             }
         }
 
-        private void WriteLineToken(LineToken line)
+        private void WriteBlock(BlockToken block)
+        {
+            WriteToken(block.Header);
+
+            WriteIndent();
+            _writer.WriteLine('{');
+            _indent++;
+
+            IToken precedingChildToken = null;
+            foreach (IToken child in block.Children)
+            {
+                WriteToken(child, precedingChildToken);
+                precedingChildToken = child;
+            }
+
+            _indent--;
+            WriteIndent();
+            _writer.WriteLine('}');
+        }
+
+        private void WriteLine(LineToken line)
         {
             WriteIndent();
             foreach (IToken element in line.Elements)
