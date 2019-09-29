@@ -64,7 +64,7 @@ namespace DotNetWrapperGen.CodeModel
         {
             var node = new NamespaceDefinition(Name)
             {
-                Source = this
+                ClonedFrom = this
             };
             foreach (ModelNodeDefinition childClone in Children.Select(c => c.Clone()))
             {

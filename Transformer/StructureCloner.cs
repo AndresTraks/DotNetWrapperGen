@@ -47,8 +47,7 @@ namespace DotNetWrapperGen.Transformer
                 return null;
             }
 
-            SourceItemDefinition clone;
-            if (_oldToNewMapping.TryGetValue(item, out clone))
+            if (_oldToNewMapping.TryGetValue(item, out SourceItemDefinition clone))
             {
                 return clone;
             }

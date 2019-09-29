@@ -72,7 +72,7 @@ namespace DotNetWrapperGen.CodeModel
             return new MethodDefinition(Name, Parameters.Select(p => p.Clone()).ToArray())
             {
                 IsConstructor = IsConstructor,
-                Source = this
+                ClonedFrom = this
             };
         }
     }

@@ -21,7 +21,7 @@ namespace DotNetWrapperGen.CodeModel
         {
             return new FieldDefinition(Name, new TypeRefDefinition())
             {
-                Source = this
+                ClonedFrom = this
             };
         }
     }

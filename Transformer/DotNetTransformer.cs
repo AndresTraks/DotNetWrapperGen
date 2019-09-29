@@ -38,8 +38,7 @@ namespace DotNetWrapperGen.Transformer
 
         public static void RenameCodeFiles(SourceItemDefinition item)
         {
-            var header = item as HeaderDefinition;
-            if (header != null)
+            if (item is HeaderDefinition header)
             {
                 header.Name = Path.GetFileNameWithoutExtension(header.FullPath) + ".cs";
             }

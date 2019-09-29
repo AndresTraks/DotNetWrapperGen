@@ -51,8 +51,7 @@ namespace DotNetWrapperGen.Transformer
                 }
             }
 
-            var @class = node as ClassDefinition;
-            if (@class != null)
+            if (node is ClassDefinition @class)
             {
                 yield return @class;
             }
@@ -67,7 +66,7 @@ namespace DotNetWrapperGen.Transformer
 
         private static string GetExternMethodName(MethodDefinition method)
         {
-            var sourceMethod = method.SourceMethod ?? method;
+            var sourceMethod = (method.ClonedFrom as MethodDefinition) ?? method;
             string methodName;
             if (sourceMethod.IsConstructor)
             {

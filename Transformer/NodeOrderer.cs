@@ -13,14 +13,12 @@ namespace DotNetWrapperGen.Transformer
 
         private void Order(ModelNodeDefinition node)
         {
-            var @enum = node as EnumDefinition;
-            if (@enum != null)
+            if (node is EnumDefinition @enum)
             {
                 return;
             }
 
-            var @class = node as ClassDefinition;
-            if (@class != null && @class.Name == "UnsafeNativeMethods")
+            if (node is ClassDefinition @class && @class.Name == "UnsafeNativeMethods")
             {
                 return;
             }

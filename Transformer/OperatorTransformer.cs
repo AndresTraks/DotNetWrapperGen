@@ -12,8 +12,7 @@ namespace DotNetWrapperGen.Transformer
 
         private static void Transform(ModelNodeDefinition node)
         {
-            MethodDefinition method = node as MethodDefinition;
-            if (method != null)
+            if (node is MethodDefinition method)
             {
                 if (IsOperator(method))
                 {
@@ -21,7 +20,7 @@ namespace DotNetWrapperGen.Transformer
                 }
                 return;
             }
-            
+
             foreach (ModelNodeDefinition child in node.Children)
             {
                 Transform(child);

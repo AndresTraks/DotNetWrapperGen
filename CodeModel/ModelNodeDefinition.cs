@@ -19,8 +19,7 @@ namespace DotNetWrapperGen.CodeModel
         public ModelNodeDefinition Parent { get; set; }
         public IList<ModelNodeDefinition> Children { get; } = new List<ModelNodeDefinition>();
 
-        public ModelNodeDefinition Source { get; set; }
-        public MethodDefinition SourceMethod => Source as MethodDefinition;
+        public ModelNodeDefinition ClonedFrom { get; set; }
 
         public virtual HeaderDefinition Header
         {

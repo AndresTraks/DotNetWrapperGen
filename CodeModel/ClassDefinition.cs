@@ -67,7 +67,7 @@ namespace DotNetWrapperGen.CodeModel
             var newClass = new ClassDefinition(Name)
             {
                 Header = Header,
-                Source = this
+                ClonedFrom = this
             };
 
             foreach (ModelNodeDefinition child in Children)

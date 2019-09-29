@@ -8,9 +8,8 @@ namespace DotNetWrapperGen.Tokenizer.CSharp
     public class CSharpClassTokenizer : INodeTokenizer
     {
         private readonly IDictionary<NodeType, INodeTokenizer> _tokenizers = new Dictionary<NodeType, INodeTokenizer>();
-        private readonly CSharpEnumTokenizer _enumTokenizer;
 
-        private NodeType[] _nodeTypeOrder = new[] {
+        private readonly NodeType[] _nodeTypeOrder = new[] {
             NodeType.Constructor,
             NodeType.Method,
             NodeType.Enum,

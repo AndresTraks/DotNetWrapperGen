@@ -28,7 +28,7 @@ namespace DotNetWrapperGen.CodeModel
             var newEnum = new EnumDefinition(Name)
             {
                 Header = Header,
-                Source = this
+                ClonedFrom = this
             };
 
             foreach (ModelNodeDefinition child in Children)
@@ -54,7 +54,7 @@ namespace DotNetWrapperGen.CodeModel
         {
             return new EnumeratorDefinition(Name, Value)
             {
-                Source = this
+                ClonedFrom = this
             };
         }
 
