@@ -64,6 +64,8 @@
     <Compile Include="Tokenizer\CSharp\CSharpEnumTokenizer.cs" />
     <Compile Include="Tokenizer\CSharp\CSharpFileTokenizer.cs" />
     <Compile Include="Tokenizer\CSharp\CSharpMethodTokenizer.cs" />
+    <Compile Include="Tokenizer\CSharp\CSharpPropertyTokenizer.cs" />
+    <Compile Include="Tokenizer\ExpressionBodyToken.cs" />
     <Compile Include="Tokenizer\INodeTokenizer.cs" />
     <Compile Include="Tokenizer\IToken.cs" />
     <Compile Include="Tokenizer\LinesToken.cs" />
@@ -75,6 +77,7 @@
     <Compile Include="Tokenizer\WordToken.cs" />
     <Compile Include="Transformer\NativeMethodImporter.cs" />
     <Compile Include="Transformer\NodeOrderer.cs" />
+    <Compile Include="Transformer\PropertyGenerator.cs" />
     <Compile Include="Utility\ClassExtensions.cs" />
     <Compile Include="Utility\EnumExtensions.cs" />
     <Compile Include="Parser\EnumParser.cs" />

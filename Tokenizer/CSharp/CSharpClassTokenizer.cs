@@ -12,6 +12,7 @@ namespace DotNetWrapperGen.Tokenizer.CSharp
         private readonly NodeType[] _nodeTypeOrder = new[] {
             NodeType.Constructor,
             NodeType.Method,
+            NodeType.Property,
             NodeType.Enum,
             NodeType.Class
         };
@@ -20,6 +21,7 @@ namespace DotNetWrapperGen.Tokenizer.CSharp
         {
             _tokenizers[NodeType.Constructor] = new CSharpMethodTokenizer();
             _tokenizers[NodeType.Method] = new CSharpMethodTokenizer();
+            _tokenizers[NodeType.Property] = new CSharpPropertyTokenizer();
             _tokenizers[NodeType.Enum] = enumTokenizer;
             _tokenizers[NodeType.Class] = this;
         }
@@ -80,7 +82,7 @@ namespace DotNetWrapperGen.Tokenizer.CSharp
                 }
                 return NodeType.Method;
             }
-            if (node is FieldDefinition)
+            if (node is PropertyDefinition)
             {
                 return NodeType.Property;
             }

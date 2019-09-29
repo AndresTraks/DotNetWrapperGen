@@ -10,6 +10,7 @@ namespace DotNetWrapperGen.Transformer
     {
         public void Transform(NamespaceDefinition globalNamespace, RootFolderDefinition rootFolder)
         {
+            new PropertyGenerator().Transform(globalNamespace);
             new NativeMethodImporter().Transform(globalNamespace, rootFolder);
             RenameCodeFiles(rootFolder);
             MoveGlobalSymbolsToClasses(globalNamespace);

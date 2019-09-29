@@ -2,12 +2,10 @@
 
 namespace DotNetWrapperGen.CodeModel
 {
-    public class PropertyDefinition
+    public class PropertyDefinition : ModelNodeDefinition
     {
         public MethodDefinition Getter { get; private set; }
         public MethodDefinition Setter { get; set; }
-        public ClassDefinition Parent { get; private set; }
-        public string VerblessName { get; private set; }
 
         public TypeRefDefinition Type
         {
@@ -17,50 +15,24 @@ namespace DotNetWrapperGen.CodeModel
             }
         }
 
-        // Property from getter method
-        public PropertyDefinition(MethodDefinition getter)
+        public PropertyDefinition(MethodDefinition getter, string name)
+            : base(name)
         {
-            Getter = getter;
-            Parent = getter.Parent as ClassDefinition;
-            throw new NotImplementedException();
-            //Parent.Children.Add(this);
+            Getter = (MethodDefinition)getter.ClonedFrom;
+            Parent = (ClassDefinition)getter.Parent;
+            Parent.Children.Add(this);
             getter.Property = this;
-
-            string name = getter.Name;
-            
-            // one_two_three -> oneTwoThree
-            while (name.Contains("_"))
-            {
-                int pos = name.IndexOf('_');
-                name = name.Substring(0, pos) + name.Substring(pos + 1, 1).ToUpper() + name.Substring(pos + 2);
-            }
-
-            if (name.StartsWith("get", StringComparison.InvariantCultureIgnoreCase))
-            {
-                VerblessName = name.Substring(3);
-            }
-            else if (name.StartsWith("is", StringComparison.InvariantCultureIgnoreCase))
-            {
-                VerblessName = name.Substring(2);
-            }
-            else if (name.StartsWith("has", StringComparison.InvariantCultureIgnoreCase))
-            {
-                VerblessName = name.Substring(3);
-            }
-            else
-            {
-                throw new NotImplementedException();
-            }
         }
 
         // Property from field
-        public PropertyDefinition(FieldDefinition field)
+        public PropertyDefinition(FieldDefinition field, string name)
+            : base(name)
         {
             //Name = field.ManagedName;
             Parent = field.Parent as ClassDefinition;
             throw new NotImplementedException();
             //Parent.Properties.Add(this);
-
+            /*
             string name = field.Name;
             if (name.StartsWith("m_"))
             {
@@ -105,12 +77,12 @@ namespace DotNetWrapperGen.CodeModel
             Setter.ReturnType = new TypeRefDefinition();
             Setter.Field = field;
             Setter.Property = this;
-            Parent.AddChild(Setter);
+            Parent.AddChild(Setter);*/
         }
 
-        public override string ToString()
+        public override object Clone()
         {
-            return VerblessName;
+            throw new NotImplementedException();
         }
     }
 }

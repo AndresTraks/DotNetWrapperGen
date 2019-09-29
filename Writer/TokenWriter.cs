@@ -42,36 +42,44 @@ namespace DotNetWrapperGen.Writer
 
         private void WriteToken(IToken token, IToken precedingToken)
         {
-            if (token is StringToken @string)
+            switch (token)
             {
-                if (token is WordToken && precedingToken != null)
-                {
-                    _writer.Write(' ');
-                }
-                _writer.Write(@string.Value);
-            }
-            else if (token is LineToken line)
-            {
-                WriteLine(line);
-            }
-            else if (token is BlockToken block)
-            {
-                if (precedingToken != null)
-                {
-                    _writer.WriteLine();
-                }
-                WriteBlock(block);
-            }
-            else if (token is LinesToken lines)
-            {
-                foreach (LineToken lineToken in lines.Lines)
-                {
-                    WriteLine(lineToken);
-                }
-            }
-            else if (token is ListToken list)
-            {
-                WriteList(list);
+                case StringToken @string:
+                    if (token is WordToken && precedingToken != null)
+                    {
+                        _writer.Write(' ');
+                    }
+                    _writer.Write(@string.Value);
+                    break;
+                case LineToken line:
+                    WriteLine(line);
+                    break;
+                case BlockToken block:
+                    if (precedingToken != null)
+                    {
+                        _writer.WriteLine();
+                    }
+                    WriteBlock(block);
+                    break;
+                case ExpressionBodyToken body:
+                    if (precedingToken != null)
+                    {
+                        _writer.WriteLine();
+                    }
+                    WriteLine(body.Line);
+                    break;
+                case LinesToken lines:
+                    {
+                        foreach (LineToken lineToken in lines.Lines)
+                        {
+                            WriteLine(lineToken);
+                        }
+                        break;
+                    }
+
+                case ListToken list:
+                    WriteList(list);
+                    break;
             }
         }
 

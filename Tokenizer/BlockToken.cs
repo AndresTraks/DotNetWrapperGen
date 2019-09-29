@@ -16,12 +16,6 @@ namespace DotNetWrapperGen.Tokenizer
             Children = children;
         }
 
-        public BlockToken(LineToken header, IList<IToken> children)
-        {
-            Header = header;
-            Children = children;
-        }
-
         public IToken Header { get; }
         public IList<IToken> Children { get; }
 

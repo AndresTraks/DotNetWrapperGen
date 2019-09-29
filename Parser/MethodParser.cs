@@ -22,7 +22,8 @@ namespace DotNetWrapperGen.Parser
             {
                 IsConstructor = cursor.Kind == CursorKind.Constructor,
                 IsStatic = cursor.IsStaticCxxMethod,
-                IsAbstract = IsCursorAbstract(cursor, context)
+                IsAbstract = IsCursorAbstract(cursor, context),
+                ReturnType = new TypeRefDefinition(cursor.ResultType)
             };
 
             ModelNodeDefinition parent = context.GetContainingClassOrNamespace();
