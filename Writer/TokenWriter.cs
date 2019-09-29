@@ -1,4 +1,5 @@
 ﻿using DotNetWrapperGen.Tokenizer;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -44,6 +45,10 @@ namespace DotNetWrapperGen.Writer
         {
             if (token is StringToken @string)
             {
+                if (token is WordToken && precedingToken != null)
+                {
+                    _writer.Write(' ');
+                }
                 _writer.Write(@string.Value);
             }
             else if (token is LineToken line)
@@ -65,6 +70,10 @@ namespace DotNetWrapperGen.Writer
                     WriteLine(lineToken);
                 }
             }
+            else if (token is ListToken list)
+            {
+                WriteList(list);
+            }
         }
 
         private void WriteBlock(BlockToken block)
@@ -75,11 +84,11 @@ namespace DotNetWrapperGen.Writer
             _writer.WriteLine('{');
             _indent++;
 
-            IToken precedingChildToken = null;
+            IToken precedingToken = null;
             foreach (IToken child in block.Children)
             {
-                WriteToken(child, precedingChildToken);
-                precedingChildToken = child;
+                WriteToken(child, precedingToken);
+                precedingToken = child;
             }
 
             _indent--;
@@ -90,11 +99,29 @@ namespace DotNetWrapperGen.Writer
         private void WriteLine(LineToken line)
         {
             WriteIndent();
+            IToken precedingToken = null;
             foreach (IToken element in line.Elements)
             {
-                WriteToken(element);
+                WriteToken(element, precedingToken);
+                precedingToken = element;
             }
             _writer.WriteLine();
+        }
+
+        private void WriteList(ListToken list)
+        {
+            IToken precedingToken = null;
+            var lastParameterIndex = list.Elements.Count - 1;
+            for (int i = 0; i < list.Elements.Count; i++)
+            {
+                IToken element = list.Elements[i];
+                WriteToken(element, precedingToken);
+                if (i != lastParameterIndex)
+                {
+                    _writer.Write(',');
+                }
+                precedingToken = element;
+            }
         }
 
         private void WriteIndent()

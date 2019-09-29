@@ -28,7 +28,7 @@ namespace DotNetWrapperGen.Tokenizer.CSharp
             }
             else
             {
-                IToken[] bodyTokens = new IToken[0];
+                IList<IToken> bodyTokens = TokenizeBody(method);
                 methodToken = new BlockToken(header, bodyTokens);
             }
             return methodToken;
@@ -36,49 +36,81 @@ namespace DotNetWrapperGen.Tokenizer.CSharp
 
         private LineToken TokenizeHeader(MethodDefinition method)
         {
-            var headerTokens = new List<IToken>();
-
-            headerTokens.Add(new StringToken("public "));
+            var headerTokens = new List<IToken>
+            {
+                new WordToken("public")
+            };
             if (method.IsStatic)
             {
-                headerTokens.Add(new StringToken("static "));
+                headerTokens.Add(new WordToken("static"));
             }
             if (method.IsExtern)
             {
-                headerTokens.Add(new StringToken("extern "));
+                headerTokens.Add(new WordToken("extern"));
             }
             if (method.IsExtern || !method.IsConstructor)
             {
                 string returnType = method.ReturnType.ManagedTypeRefName;
-                headerTokens.Add(new StringToken(returnType + " "));
+                headerTokens.Add(new WordToken(returnType));
             }
 
             string managedName = method.Name.Substring(0, 1).ToUpper() + method.Name.Substring(1);
             string name = method.IsExtern ? method.Name : managedName;
-            headerTokens.Add(new StringToken(name + "("));
-
-            var lastParameterIndex = method.Parameters.Length - 1;
-            for (int i = 0; i < method.Parameters.Length; i++)
-            {
-                WriteParameter(method.Parameters[i], headerTokens);
-                if (i != lastParameterIndex)
-                {
-                    headerTokens.Add(new StringToken(", "));
-                }
-            }
-            headerTokens.Add(new StringToken(")"));
+            headerTokens.Add(new WordToken(name + "("));
+            
+            headerTokens.Add(TokenizeParameters(method));
 
             if (method.IsExtern)
             {
-                headerTokens.Add(new StringToken(";"));
+                headerTokens.Add(new StringToken(");"));
+            }
+            else
+            {
+                headerTokens.Add(new StringToken(")"));
             }
 
             return new LineToken(headerTokens);
         }
 
-        private void WriteParameter(ParameterDefinition parameter, List<IToken> headerTokens)
+        private IToken TokenizeParameters(MethodDefinition method)
         {
-            headerTokens.Add(new StringToken($"{parameter.Type.ManagedTypeRefName} {parameter.Name}"));
+            int paramCount = method.Parameters.Length;
+            if (paramCount == 0)
+            {
+                return NullToken.Instance;
+            }
+
+            var parameters = new List<IToken>();
+            for (int i = 0; i < paramCount; i++)
+            {
+                IToken parameter = TokenizeParameter(method.Parameters[i]);
+                parameters.Add(parameter);
+            }
+            return new ListToken(parameters);
+        }
+
+        private WordToken TokenizeParameter(ParameterDefinition parameter)
+        {
+            return new WordToken($"{parameter.Type.ManagedTypeRefName} {parameter.Name}");
+        }
+
+        private List<IToken> TokenizeBody(MethodDefinition method)
+        {
+            var lines = new List<IToken>();
+            if (method.IsConstructor)
+            {
+                var nativePtrParts = new List<IToken>
+                {
+                    new WordToken("IntPtr"),
+                    new WordToken("native"),
+                    new WordToken("="),
+                    new WordToken(method.ClonedFrom.Parent.Name + "_new("),
+                    new StringToken(");")
+                };
+                var nativePtr = new LineToken(nativePtrParts);
+                lines.Add(nativePtr);
+            }
+            return lines;
         }
     }
 }

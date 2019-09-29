@@ -68,9 +68,11 @@
     <Compile Include="Tokenizer\IToken.cs" />
     <Compile Include="Tokenizer\LinesToken.cs" />
     <Compile Include="Tokenizer\LineToken.cs" />
+    <Compile Include="Tokenizer\ListToken.cs" />
     <Compile Include="Tokenizer\NullToken.cs" />
     <Compile Include="Tokenizer\StringToken.cs" />
     <Compile Include="Tokenizer\TokenizerContext.cs" />
+    <Compile Include="Tokenizer\WordToken.cs" />
     <Compile Include="Transformer\NativeMethodImporter.cs" />
     <Compile Include="Transformer\NodeOrderer.cs" />
     <Compile Include="Utility\ClassExtensions.cs" />
