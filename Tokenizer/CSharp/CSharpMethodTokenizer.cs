@@ -58,7 +58,7 @@ namespace DotNetWrapperGen.Tokenizer.CSharp
             string name = method.IsExtern ? method.Name : managedName;
             headerTokens.Add(new WordToken(name + "("));
             
-            headerTokens.Add(TokenizeParameters(method));
+            headerTokens.Add(TokenizeParameterDefinitions(method));
 
             if (method.IsExtern)
             {
@@ -72,7 +72,7 @@ namespace DotNetWrapperGen.Tokenizer.CSharp
             return new LineToken(headerTokens);
         }
 
-        private IToken TokenizeParameters(MethodDefinition method)
+        private IToken TokenizeParameterDefinitions(MethodDefinition method)
         {
             int paramCount = method.Parameters.Length;
             if (paramCount == 0)
@@ -80,16 +80,16 @@ namespace DotNetWrapperGen.Tokenizer.CSharp
                 return NullToken.Instance;
             }
 
-            var parameters = new List<IToken>();
+            var parameters = new IToken[paramCount];
             for (int i = 0; i < paramCount; i++)
             {
-                IToken parameter = TokenizeParameter(method.Parameters[i]);
-                parameters.Add(parameter);
+                IToken parameter = TokenizeParameterDefinition(method.Parameters[i]);
+                parameters[i] = parameter;
             }
             return new ListToken(parameters);
         }
 
-        private WordToken TokenizeParameter(ParameterDefinition parameter)
+        private WordToken TokenizeParameterDefinition(ParameterDefinition parameter)
         {
             return new WordToken($"{parameter.Type.ManagedTypeRefName} {parameter.Name}");
         }
@@ -97,6 +97,7 @@ namespace DotNetWrapperGen.Tokenizer.CSharp
         private List<IToken> TokenizeBody(MethodDefinition method)
         {
             var lines = new List<IToken>();
+            IToken parametersList = TokenizeParameters(method);
             if (method.IsConstructor)
             {
                 var nativePtrParts = new List<IToken>
@@ -105,12 +106,51 @@ namespace DotNetWrapperGen.Tokenizer.CSharp
                     new WordToken("native"),
                     new WordToken("="),
                     new WordToken(method.ClonedFrom.Parent.Name + "_new("),
+                    parametersList,
                     new StringToken(");")
                 };
                 var nativePtr = new LineToken(nativePtrParts);
                 lines.Add(nativePtr);
+                lines.Add(new LineToken("InitializeUserOwned(native);"));
+            }
+            else
+            {
+                var lineParts = new List<IToken>
+                {
+                    new WordToken(method.ClonedFrom.Parent.Name + "_" + method.ClonedFrom.Name + "("),
+                    parametersList,
+                    new StringToken(");")
+                };
+                lines.Add(new LineToken(lineParts));
             }
             return lines;
+        }
+
+        private static IToken TokenizeParameters(MethodDefinition method)
+        {
+            IToken[] list;
+            int listIndex;
+            if (method.IsStatic || method.IsConstructor)
+            {
+                if (method.Parameters.Length == 0)
+                {
+                    return NullToken.Instance;
+                }
+                list = new IToken[method.Parameters.Length];
+                listIndex = 0;
+            }
+            else
+            {
+                list = new IToken[method.Parameters.Length + 1];
+                list[0] = new WordToken("Native");
+                listIndex = 1;
+            }
+            for (int i = 0; i < method.Parameters.Length; i++)
+            {
+                ParameterDefinition parameter = method.Parameters[i];
+                list[listIndex++] = new WordToken(parameter.Name);
+            }
+            return new ListToken(list);
         }
     }
 }

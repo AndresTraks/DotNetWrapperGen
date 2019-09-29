@@ -32,9 +32,9 @@ namespace DotNetWrapperGen.Tokenizer.CSharp
         private IToken Tokenize(ClassDefinition @class)
         {
             var abstractSpecifier = @class.IsAbstract ? "abstract " : null;
-            var baseClassSpecifier = @class.BaseClass != null ? @class.BaseClass.ManagedName : null;
+            var baseClassSpecifier = @class.BaseClass != null ? (" : " + @class.BaseClass.ManagedName) : null;
 
-            var header = new LineToken($"public {abstractSpecifier}class {@class.Name}");
+            var header = new LineToken($"public {abstractSpecifier}class {@class.Name}{baseClassSpecifier}");
             IList<IToken> children = GetClassMembers(@class);
             return new BlockToken(header, children);
         }

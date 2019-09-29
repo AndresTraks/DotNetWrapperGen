@@ -30,14 +30,10 @@ namespace DotNetWrapperGen.Tokenizer.CSharp
             foreach (EnumeratorDefinition enumerator in @enum.Enumerators)
             {
                 string comma = enumerator == lastEnumerator ? "" : ",";
-                if (enumerator.Value != null)
-                {
-                    enumerators.Add(new LineToken($"{enumerator.Name} = {enumerator.Value}{comma}"));
-                }
-                else
-                {
-                    enumerators.Add(new LineToken(enumerator.Name + comma));
-                }
+                string enumeratorLine = enumerator.Value != null
+                    ? $"{enumerator.Name} = {enumerator.Value}{comma}"
+                    : enumerator.Name + comma;
+                enumerators.Add(new LineToken(enumeratorLine));
             }
 
             BlockToken enumToken = new BlockToken(headerToken, enumerators);
