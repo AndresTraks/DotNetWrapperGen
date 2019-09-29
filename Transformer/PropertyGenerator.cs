@@ -17,7 +17,7 @@ namespace DotNetWrapperGen.Transformer
         {
             if (node is ClassDefinition || node is NamespaceDefinition)
             {
-                TransformNodeMethods(node);
+                TransformNodeMethodsAndFields(node);
             }
 
             foreach (ModelNodeDefinition child in node.Children)
@@ -26,70 +26,112 @@ namespace DotNetWrapperGen.Transformer
             }
         }
 
-        private void TransformNodeMethods(ModelNodeDefinition node)
+        private void TransformNodeMethodsAndFields(ModelNodeDefinition node)
         {
-            var methodsToRemove = new List<MethodDefinition>();
+            var nodesToRemove = new List<ModelNodeDefinition>();
+
             List<MethodDefinition> allMethods = node.Children.OfType<MethodDefinition>().ToList();
             foreach (MethodDefinition method in allMethods)
             {
-                TransformMethod(method, methodsToRemove);
+                TransformGetterMethod(method, nodesToRemove);
             }
 
-            foreach (MethodDefinition method in methodsToRemove)
+            foreach (MethodDefinition method in allMethods)
             {
-                method.Parent.RemoveChild(method);
+                TransformSetterMethod(method, nodesToRemove);
+            }
+
+            // If the node has both a field and a getter method with the same
+            // wrapper property, prefer to call the getter.
+
+            List<FieldDefinition> allFields = node.Children.OfType<FieldDefinition>().ToList();
+            foreach (FieldDefinition method in allFields)
+            {
+                TransformField(method, nodesToRemove);
+            }
+
+            foreach (ModelNodeDefinition child in nodesToRemove)
+            {
+                child.Parent.RemoveChild(child);
             }
         }
 
-        private void TransformMethod(MethodDefinition method, IList<MethodDefinition> methodsToRemove)
+        private void TransformGetterMethod(MethodDefinition method, IList<ModelNodeDefinition> nodesToRemove)
         {
-            string verblessName = GetGetterVerblessName(method);
+            string propertyName = GetPropertyName(method);
+            if (propertyName != null)
+            {
+                new PropertyDefinition(method, propertyName);
+                nodesToRemove.Add(method);
+            }
+        }
+
+        private void TransformSetterMethod(MethodDefinition method, List<ModelNodeDefinition> nodesToRemove)
+        {
+            string verblessName = GetSetterVerblessName(method);
             if (verblessName != null)
             {
-                MethodDefinition getter = method;
-                var property = new PropertyDefinition(getter, verblessName);
-                MethodDefinition setter = FindSetter(method);
-                if (setter != null)
+                PropertyDefinition property = method.Parent.Children
+                    .OfType<PropertyDefinition>()
+                    .FirstOrDefault(p => p.Name == verblessName);
+                if (property == null)
                 {
-                    property.Setter = (MethodDefinition)setter.ClonedFrom;
-                    methodsToRemove.Add(setter);
+                    return;
                 }
-                methodsToRemove.Add(getter);
+                property.Setter = (MethodDefinition)method.ClonedFrom;
+                nodesToRemove.Add(method);
             }
         }
 
-        private MethodDefinition FindSetter(MethodDefinition method)
+        private void TransformField(FieldDefinition field, List<ModelNodeDefinition> nodesToRemove)
         {
-            return null;
+            //throw new NotImplementedException();
         }
 
-        private static string GetGetterVerblessName(MethodDefinition method)
+        private static string GetPropertyName(MethodDefinition getter)
         {
-            if (method.Parameters.Length > 0)
+            if (getter.Parameters.Length != 0)
             {
                 return null;
             }
 
-            string name = method.Name;
-            string verblessName;
+            string name = getter.Name;
+            string propertyName;
             if (name.StartsWith("get", StringComparison.InvariantCultureIgnoreCase))
             {
-                verblessName = name.Substring(3);
+                propertyName = name.Substring(3);
             }
             else if (name.StartsWith("is", StringComparison.InvariantCultureIgnoreCase))
             {
-                verblessName = name.Substring(2);
+                propertyName = "Is" + name.Substring(2);
             }
             else if (name.StartsWith("has", StringComparison.InvariantCultureIgnoreCase))
             {
-                verblessName = name.Substring(3);
+                propertyName = "Has" + name.Substring(3);
             }
             else
             {
                 return null;
             }
 
-            return ToCamelCase(verblessName);
+            return ToCamelCase(propertyName);
+        }
+
+        private static string GetSetterVerblessName(MethodDefinition method)
+        {
+            if (method.Parameters.Length != 1)
+            {
+                return null;
+            }
+
+            string name = method.Name;
+            if (name.StartsWith("set", StringComparison.InvariantCultureIgnoreCase))
+            {
+                string verblessName = name.Substring(3);
+                return ToCamelCase(verblessName);
+            }
+
+            return null;
         }
 
         private static string ToCamelCase(string name)

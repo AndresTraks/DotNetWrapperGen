@@ -10,10 +10,10 @@ namespace DotNetWrapperGen.Tokenizer.CSharp
         private readonly IDictionary<NodeType, INodeTokenizer> _tokenizers = new Dictionary<NodeType, INodeTokenizer>();
 
         private readonly NodeType[] _nodeTypeOrder = new[] {
+            NodeType.Enum,
             NodeType.Constructor,
             NodeType.Method,
             NodeType.Property,
-            NodeType.Enum,
             NodeType.Class
         };
 

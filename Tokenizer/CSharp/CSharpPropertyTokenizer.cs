@@ -18,8 +18,12 @@ namespace DotNetWrapperGen.Tokenizer.CSharp
                     new WordToken($"{property.Getter.Parent.Name}_{property.Getter.Name}(Native);")}));
                 return expressionBody;
             }
-            var header = new LineToken("public ");
-            var propertyToken = new BlockToken(header, new IToken[0]);
+
+            var header = new LineToken($"public {property.Getter.ReturnType} {property.Name}");
+            var propertyToken = new BlockToken(header, new IToken[]{
+                new LineToken($"get => {property.Getter.Parent.Name}_{property.Getter.Name}(Native);"),
+                new LineToken($"set => {property.Setter.Parent.Name}_{property.Setter.Name}(Native, value);")
+            });
             return propertyToken;
         }
     }
